@@ -35,15 +35,15 @@
         .term {
             color: lightgreen;
             font-weight: bold;
+        }        
+        .vietnamese {
+            color: lightblue;
         }
     </style>
 
     <style>
         .ipa {
             color: yellow;
-        }
-        .vietnamese {
-            color: lightblue;
         }        
         .example {
             color: lightgreen;
@@ -194,7 +194,9 @@
 <div id="notification"></div>
 
 <div class="controls"></div>
-<button onclick="toggleStyle()">Đổi màu</button>
+<button onclick="toggleStyle()">Ẩn(En)</button>
+<button onclick="toggleVietnameseColor()">Ẩn(Vi)</button>
+
 <button onclick="prevWord()">Trước</button>
 <button onclick="flipCard()">Lật Thẻ</button>
 <button onclick="nextWord()">Tiếp Theo</button>
@@ -236,6 +238,21 @@
             styleTag.innerHTML = ".term { color: #1c2025; font-weight: bold; }";
         } else {
             styleTag.innerHTML = ".term { color: lightgreen; font-weight: bold; }";
+        }
+    }
+    
+    function toggleVietnameseColor() {
+        const styleTag = document.getElementById("dynamic-style");
+        // Kiểm tra nếu đã dùng màu đỏ thì đổi về màu lightblue, ngược lại đổi thành màu đỏ
+        if (styleTag.innerHTML.includes(".vietnamese { color: #1c2025; }")) {
+            styleTag.innerHTML = styleTag.innerHTML.replace(".vietnamese { color: #1c2025; }", ".vietnamese { color: lightblue; }");
+        } else {
+            // Nếu chưa có định nghĩa màu cho .vietnamese, ta thêm vào
+            if (!styleTag.innerHTML.includes(".vietnamese")) {
+                styleTag.innerHTML += "\n.vietnamese { color: #1c2025; }";
+            } else {
+                styleTag.innerHTML = styleTag.innerHTML.replace(".vietnamese { color: lightblue; }", ".vietnamese { color: #1c2025; }");
+            }
         }
     }
 
