@@ -1,0 +1,14 @@
+{
+    "lessons": [
+        {
+            "name": "Conversation_TQT.json",
+            "mapping": "mapping_Conversation_TQT.json",
+            "audio": "audio_Conversation_TQT"
+        },
+        {
+            "name": "TQT_100.json",
+            "mapping": "mapping_TQT_100.json",
+            "audio": "audio_TQT_100"
+        }
+    ]
+}
