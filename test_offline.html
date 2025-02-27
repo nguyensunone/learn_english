@@ -28,22 +28,16 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
-        }
-    </style>
-    
-    <style id="dynamic-style">    
+        }     
         .term {
             color: lightgreen;
-            font-weight: bold;
-        }        
-        .vietnamese {
-            color: lightblue;
-        }
-    </style>
-
-    <style>
+            font-weight: 
+        }    
         .ipa {
             color: yellow;
+        }
+        .vietnamese {
+            color: lightblue;
         }        
         .example {
             color: lightgreen;
@@ -52,7 +46,7 @@
             color: yellow;
         }
         .example_vi {
-            color: lightblue;
+            color: #61dafb;
         }
         input, button {
             margin: 5px;
@@ -129,12 +123,22 @@
         }
         #notification {
             display: none;
-            padding: 10px;
-            margin: 10px auto;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
             text-align: center;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight:
+            color: #ffffff;
+            background-color: #f44336;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 80%;
+            z-index: 1000;
         }
+
         
         #recognizedSpeech {
             color: #61dafb;
@@ -176,7 +180,26 @@
 </div>
 <div id="vocabLabel">Không có từ vựng nào được thêm.</div>
 
+<!--Nhóm các nút đổi màu-->
+<div style="text-align: center;">
+<label>  
+    <input type="checkbox" onchange="toggleVisibility('term')"> Ẩn En  
+</label>  
+<label>  
+    <input type="checkbox" onchange="toggleVisibility('ipa')"> Ẩn IPA  
+</label>  
+<label>  
+    <input type="checkbox" onchange="toggleVisibility('vietnamese')"> Ẩn Vi  
+</label>
+</div>
+
+<div id="notification"></div>
+<div id="speechResult">
+    <p><span id="recognizedSpeech"></span></p>
+</div>
+
 <textarea id="answerInput" placeholder="Viết Mặt Trước...(V1). Nói Mặt Trước...(N1)" onkeydown="handleKeyDown(event)"></textarea>
+<textarea id="writingCheckBack" placeholder="Viết Mặt Sau...(V2). Nói Mặt Sau...(N2)" onkeydown="handleKeyDownBack(event)"></textarea>
 
 <!-- Nhóm các nút kiểm tra -->
 <div style="text-align: center;">
@@ -186,31 +209,25 @@
     <button id="speakCheckButton" onclick="startSpeechRecognition()">N2</button>
 </div>
 
-<textarea id="writingCheckBack" placeholder="Viết Mặt Sau...(V2). Nói Mặt Sau...(N2)" onkeydown="handleKeyDownBack(event)"></textarea>
 
-<div id="speechResult">
-    <p><span id="recognizedSpeech"></span></p>
-</div>
-<div id="notification"></div>
+
+
 
 <div class="controls"></div>
-<button onclick="toggleStyle()">Ẩn(En)</button>
-<button onclick="toggleVietnameseColor()">Ẩn(Vi)</button>
-
 <button onclick="prevWord()">Trước</button>
 <button onclick="flipCard()">Lật Thẻ</button>
 <button onclick="nextWord()">Tiếp Theo</button>
 <button id="repeatButton" onclick="repeatPronunciation()">Lặp Lại</button>
 <button id="autoFlipButton" onclick="toggleAutoFlip()">Tự Động</button>
-<button id="toggleModeButton" onclick="toggleMode()">Theo Thứ Tự</button>
+<button id="toggleModeButton" onclick="toggleMode()">Thứ Tự</button>
 <!-- Dropdown để chọn bài học -->
 <select id="lessonSelector" onchange="loadLesson()">
     <!-- Các tùy chọn sẽ được thêm tự động từ json_list.json -->
 </select>
-<input type="number" id="startQuestion" placeholder="Nhập số câu hỏi bắt đầu" min="1" max="138">
-<input type="number" id="questionCount" placeholder="Số câu hỏi" min="1" max="138">
+<input type="number" id="startQuestion" placeholder="Câu BĐ" min="1" max="138">
+<input type="number" id="questionCount" placeholder="SL câu" min="1" max="138">
 <button onclick="startSession()">Bắt Đầu Phiên Học</button>
-
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
@@ -231,31 +248,8 @@
 
     // Danh sách bài học được load động từ file json_list.json
     let lessons = [];
-
-    function toggleStyle() {
-        let styleTag = document.getElementById("dynamic-style");
-        if (styleTag.innerHTML.includes("lightgreen")) {
-            styleTag.innerHTML = ".term { color: #1c2025; font-weight: bold; }";
-        } else {
-            styleTag.innerHTML = ".term { color: lightgreen; font-weight: bold; }";
-        }
-    }
+    let hiddenElements = { term: false, ipa: false, vietnamese: false }; // Biến để xác định các phần tử cần ẩn 
     
-    function toggleVietnameseColor() {
-        const styleTag = document.getElementById("dynamic-style");
-        // Kiểm tra nếu đã dùng màu đỏ thì đổi về màu lightblue, ngược lại đổi thành màu đỏ
-        if (styleTag.innerHTML.includes(".vietnamese { color: #1c2025; }")) {
-            styleTag.innerHTML = styleTag.innerHTML.replace(".vietnamese { color: #1c2025; }", ".vietnamese { color: lightblue; }");
-        } else {
-            // Nếu chưa có định nghĩa màu cho .vietnamese, ta thêm vào
-            if (!styleTag.innerHTML.includes(".vietnamese")) {
-                styleTag.innerHTML += "\n.vietnamese { color: #1c2025; }";
-            } else {
-                styleTag.innerHTML = styleTag.innerHTML.replace(".vietnamese { color: lightblue; }", ".vietnamese { color: #1c2025; }");
-            }
-        }
-    }
-
     function startSession() {
         const startQuestion = parseInt(document.getElementById('startQuestion').value);
         const questionCount = parseInt(document.getElementById('questionCount').value) || 10;
@@ -302,32 +296,45 @@
         displayWord();
     }
 
-    function displayWord() {
-        if (vocabList.length > 0 && currentIndex < vocabList.length) {
-            const word = vocabList[currentIndex];
-            const frontCard = `
-                <div class="card">
-                    <span class="term">${word[0]}</span><br>
-                    <span class="ipa">${word[1]}</span><br>                
-                    <span class="vietnamese">${word[2]}</span><br>                    
-                </div>
-            `;
-            const backCard = `
-                <div class="card">
-                    <span class="example">${word[3]}</span><br>
-                    <span class="example_ipa">${word[4]}</span><br>
-                    <span class="example_vi">${word[5]}</span>
-                </div>
-            `;
-            document.getElementById('vocabLabel').innerHTML = isFront ? frontCard : backCard;
-            // Phát âm thanh tương ứng với mặt thẻ
-            const pronunciationText = isFront ? word[0].toString() : word[3].toString();
-            playPronunciation(pronunciationText);
-        } else {
-            document.getElementById('vocabLabel').innerText = "Tất cả từ vựng đã hoàn thành.";
-        }
-        updateQuestionCounter();
-    }
+    function displayWord() {  
+    if (vocabList.length > 0 && currentIndex < vocabList.length) {  
+        const word = vocabList[currentIndex];  
+        
+        // Xây dựng nội dung thẻ frontCard  
+        const frontCard = `  
+            <div class="card">  
+                <span class="term" style="color: ${hiddenElements.term ? '#1c2025' : 'lightgreen'};">${word[0]}</span><br>  
+                <span class="ipa" style="color: ${hiddenElements.ipa ? '#1c2025' : 'yellow'};">${word[1]}</span><br>                
+                <span class="vietnamese" style="color: ${hiddenElements.vietnamese ? '#1c2025' : '#61dafb'};">${word[2]}</span><br>                    
+            </div>  
+        `;  
+        
+        // Xây dựng nội dung thẻ backCard  
+        const backCard = `  
+            <div class="card">  
+                <span class="example">${word[3]}</span><br>  
+                <span class="example_ipa">${word[4]}</span><br>  
+                <span class="example_vi">${word[5]}</span>  
+            </div>  
+        `;  
+        
+        // Hiển thị thẻ tương ứng  
+        document.getElementById('vocabLabel').innerHTML = isFront ? frontCard : backCard;  
+
+        // Phát âm thanh tương ứng với mặt thẻ  
+        const pronunciationText = isFront ? word[0].toString() : word[3].toString();  
+        playPronunciation(pronunciationText);  
+    } else {  
+        document.getElementById('vocabLabel').innerText = "Tất cả từ vựng đã hoàn thành.";  
+    }  
+    updateQuestionCounter();  
+}  
+
+    // Hàm để ẩn hiện các phần tử  
+    function toggleVisibility(element) {  
+        hiddenElements[element] = !hiddenElements[element]; // Đảo ngược trạng thái ẩn hiện  
+        displayWord(); // Gọi lại hàm displayWord để cập nhật hiển thị  
+}  
 
     function updateQuestionCounter() {
         const questionCounter = document.getElementById('questionCounter');
@@ -540,52 +547,72 @@
         return text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, '').replace(/\s{2,}/g, ' ');
     }
 
-    function checkAnswer() {
-        const answerInput = document.getElementById('answerInput');
-        const userAnswer = removePunctuation(answerInput.value.toString().trim().toLowerCase());
-        const word = vocabList[currentIndex];
-        const expectedText = isFront ? word[0] : word[3];
-        const normalizedExpectedText = removePunctuation(expectedText.toString().trim().toLowerCase());
-        if (userAnswer === normalizedExpectedText) {
-            showNotification("Đúng!", true);
-            playPronunciation(expectedText);
-            setTimeout(() => {
-                if (isFront) {
-                    flipCard();
-                } else {
-                    nextWord();
-                }
-            }, 3000);
-        } else {
-            showNotification("Sai!", false);
-            playPronunciation(expectedText);
-        }
-        answerInput.value = '';
+    function showNotification(message, isCorrect, userAnswer = "", correctAnswer = "") {
+    const notification = document.getElementById('notification');
+    notification.innerHTML = `<strong>${message}</strong>`;
+
+    if (!isCorrect) {
+        notification.innerHTML += `<br><span style="color: black;">"${userAnswer}"</span>`;
+        notification.innerHTML += `<br><span style="color: darkblue;">"${correctAnswer}"</span>`;
     }
 
-    function checkAnswerBack() {
-        const currentExample = removePunctuation(vocabList[currentIndex][3].toString().trim().toLowerCase());
-        const userAnswerBack = removePunctuation(document.getElementById("writingCheckBack").value.trim().toLowerCase());
-        document.getElementById("writingCheckBack").value = "";
-        if (userAnswerBack === currentExample) {
-            showNotification("Đúng!", true);
-            document.getElementById('vocabLabel').innerHTML = `
-                <div class="card">
-                    <span class="example">${vocabList[currentIndex][3]}</span><br>
-                    <span class="example_ipa">${vocabList[currentIndex][4]}</span><br>
-                    <span class="example_vi">${vocabList[currentIndex][5]}</span>
-                </div>
-            `;
-            playPronunciation(vocabList[currentIndex][3]);
-            setTimeout(() => {
+    notification.style.display = 'block';
+    notification.style.backgroundColor = isCorrect ? '#4caf50' : '#f44336';
+
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 5000);
+}
+
+function checkAnswer() {
+    const answerInput = document.getElementById('answerInput');
+    const userAnswer = removePunctuation(answerInput.value.toString().trim().toLowerCase());
+    const word = vocabList[currentIndex];
+    const expectedText = isFront ? word[0] : word[3];
+    const normalizedExpectedText = removePunctuation(expectedText.toString().trim().toLowerCase());
+
+    if (userAnswer === normalizedExpectedText) {
+        showNotification("Đúng!", true);
+        playPronunciation(expectedText);
+        setTimeout(() => {
+            if (isFront) {
+                flipCard();
+            } else {
                 nextWord();
-            }, 4000);
-        } else {
-            showNotification("Sai!", false);
-            flipCardToBack();
-            playPronunciation(vocabList[currentIndex][3]);
-        }
+            }
+        }, 3000);
+    } else {
+        showNotification("Sai!", false, userAnswer, normalizedExpectedText);
+        playPronunciation(expectedText);
     }
+    answerInput.value = '';
+}
+
+function checkAnswerBack() {
+    const currentExample = removePunctuation(vocabList[currentIndex][3].toString().trim().toLowerCase());
+    const userAnswerBack = removePunctuation(document.getElementById("writingCheckBack").value.trim().toLowerCase());
+    document.getElementById("writingCheckBack").value = "";
+
+    if (userAnswerBack === currentExample) {
+        showNotification("Đúng!", true);
+        document.getElementById('vocabLabel').innerHTML = `
+            <div class="card">
+                <span class="example">${vocabList[currentIndex][3]}</span><br>
+                <span class="example_ipa">${vocabList[currentIndex][4]}</span><br>
+                <span class="example_vi">${vocabList[currentIndex][5]}</span>
+            </div>
+        `;
+        playPronunciation(vocabList[currentIndex][3]);
+        setTimeout(() => {
+            nextWord();
+        }, 4000);
+    } else {
+        showNotification("Sai!", false, userAnswerBack, currentExample);
+        flipCardToBack();
+        playPronunciation(vocabList[currentIndex][3]);
+    }
+}
+
 
     function startSpeechRecognition() {
         if (!('webkitSpeechRecognition' in window)) {
@@ -623,7 +650,7 @@
             playPronunciation(word[3]);
             setTimeout(() => {
                 nextWord();
-            }, 4000);
+            }, 3000);
         } else {
             showNotification("Sai!", false);
             flipCardToBack();
