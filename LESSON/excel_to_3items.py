@@ -26,6 +26,10 @@ def create_audio_and_mapping(df, lesson_name):
 
     audio_mapping = []
     for idx, (word0, word3) in enumerate(zip(words_col0, words_col3)):
+        # Chuẩn hóa dấu nháy
+        word0 = word0.replace("’", "'").replace("“", '"').replace("”", '"')
+        word3 = word3.replace("’", "'").replace("“", '"').replace("”", '"')
+
         # Âm thanh cột 0
         filename0 = f"{output_dir}/audio_{lesson_name}_{idx + 1}_col0.mp3"
         tts0 = gTTS(word0, lang="en")
@@ -41,15 +45,25 @@ def create_audio_and_mapping(df, lesson_name):
     mapping_file = f"mapping_{lesson_name}.json"
     with open(mapping_file, "w", encoding="utf-8") as f:
         json.dump(audio_mapping, f, ensure_ascii=False, indent=4)
-    
+
     return output_dir, mapping_file
 
 # Hàm tạo file JSON 6 cột
 def create_lesson_json(df, lesson_name):
+    # Chuẩn hóa dữ liệu: Chuyển tất cả giá trị thành chuỗi và thay thế dấu nháy cong thành dấu nháy thẳng
+    df = df.applymap(lambda x: str(x).replace("’", "'") if isinstance(x, str) else str(x))
+
+    # Chuyển đổi dữ liệu thành danh sách
     data = df.iloc[:, :6].fillna("").values.tolist()
+
+    # In dữ liệu JSON ra console để kiểm tra
+    print(json.dumps(data, ensure_ascii=False, indent=4))  
+
+    # Tạo file JSON
     lesson_json = f"{lesson_name}.json"
     with open(lesson_json, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
     return lesson_json
 
 # Hàm xử lý chính khi bấm nút "Tạo Tất Cả"
