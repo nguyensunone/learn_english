@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học Tiếng Anh</title>
+    <title>Thi Quoc Tich</title>
     <style>    
         body {
             font-family: 'Arial', sans-serif;
@@ -31,13 +31,13 @@
         }     
         .term {
             color: lightgreen;
-            font-weight: 
+            font-weight: bold;
         }    
         .ipa {
             color: yellow;
         }
         .vietnamese {
-            color: lightblue;
+            color: #61dafb;
         }        
         .example {
             color: lightgreen;
@@ -131,14 +131,13 @@
             text-align: left;
             border-radius: 8px;
             font-size: 18px;
-            font-weight:
+            font-weight: bold;
             color: #ffffff;
             background-color: #f44336;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             max-width: 80%;
             z-index: 1000;
         }
-
         
         #recognizedSpeech {
             color: #61dafb;
@@ -171,9 +170,24 @@
             font-weight: bold;    
     	    font-size: 20px;
 	    }
+        #slowPronunciationButton {
+            background-color: #61dafb;
+            color: #282c34;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            margin: 10px 5px;
+        }
+        #slowPronunciationButton:hover {
+            background-color: #21a1f1;
+        }
     </style>
 </head>
 <body>
+<a href="help.html" style="position: fixed; top: 20px; right: 20px; padding: 10px; background-color: #61dafb; color: #282c34; text-decoration: none; border-radius: 4px;">Help / Trợ giúp</a>
 
 <div style="text-align: center;">
     <div id="questionCounter">Câu hỏi: 0/0</div>
@@ -209,10 +223,6 @@
     <button id="speakCheckButton" onclick="startSpeechRecognition()">N2</button>
 </div>
 
-
-
-
-
 <div class="controls"></div>
 <button onclick="prevWord()">Trước</button>
 <button onclick="flipCard()">Lật Thẻ</button>
@@ -220,6 +230,10 @@
 <button id="repeatButton" onclick="repeatPronunciation()">Lặp Lại</button>
 <button id="autoFlipButton" onclick="toggleAutoFlip()">Tự Động</button>
 <button id="toggleModeButton" onclick="toggleMode()">Thứ Tự</button>
+<button id="markDifficultButton" onclick="markAsDifficult()">Lưu Khó</button>
+<button id="studyDifficultButton" onclick="studyDifficultWords()">Học Khó</button>
+<button id="removeDifficultButton" onclick="removeFromDifficult()">Xóa Khó</button>
+<button id="slowPronunciationButton" onclick="toggleSlowPronunciation()">Phát Âm Chậm</button>
 <!-- Dropdown để chọn bài học -->
 <select id="lessonSelector" onchange="loadLesson()">
     <!-- Các tùy chọn sẽ được thêm tự động từ json_list.json -->
@@ -249,6 +263,63 @@
     // Danh sách bài học được load động từ file json_list.json
     let lessons = [];
     let hiddenElements = { term: false, ipa: false, vietnamese: false }; // Biến để xác định các phần tử cần ẩn 
+    let difficultWords = []; // Mảng lưu trữ các câu khó
+
+    // Hàm khởi tạo: Load danh sách câu khó từ localStorage (nếu có)
+    function loadDifficultWords() {
+        const savedDifficultWords = localStorage.getItem('difficultWords');
+        if (savedDifficultWords) {
+            difficultWords = JSON.parse(savedDifficultWords);
+        }
+    }
+
+    // Hàm lưu danh sách câu khó vào localStorage
+    function saveDifficultWords() {
+        localStorage.setItem('difficultWords', JSON.stringify(difficultWords));
+    }
+    
+    function markAsDifficult() {
+        if (vocabList.length === 0) return;
+
+        const currentWord = vocabList[currentIndex];
+        const wordId = currentWord[0]; // Sử dụng từ hoặc một định danh duy nhất để đánh dấu
+
+        // Kiểm tra xem câu đã được đánh dấu chưa
+        const isAlreadyMarked = difficultWords.some(word => word[0] === wordId);
+        if (!isAlreadyMarked) {
+            difficultWords.push(currentWord); // Thêm câu vào danh sách câu khó
+            saveDifficultWords(); // Lưu vào localStorage
+            alert("Câu này đã được đánh dấu là khó và sẽ được học lại trong phiên sau.");
+        } else {
+            alert("Câu này đã được đánh dấu là khó trước đó.");
+        }
+    }
+
+    function studyDifficultWords() {
+        if (difficultWords.length === 0) {
+            alert("Bạn chưa đánh dấu câu nào là khó.");
+            return;
+        }
+
+        // Gán danh sách câu khó vào vocabList để học
+        vocabList = difficultWords;
+        currentIndex = 0;
+        displayWord();
+        alert("Bắt đầu học các câu đã được đánh dấu là khó.");
+    }
+
+    function removeFromDifficult() {
+        if (vocabList.length === 0) return;
+
+        const currentWord = vocabList[currentIndex];
+        const wordId = currentWord[0]; // Sử dụng từ hoặc một định danh duy nhất
+
+        // Lọc ra câu khó cần xóa
+        difficultWords = difficultWords.filter(word => word[0] !== wordId);
+        saveDifficultWords(); // Lưu lại vào localStorage
+
+        alert("Câu này đã được xóa khỏi danh sách câu khó.");
+    }
     
     function startSession() {
         const startQuestion = parseInt(document.getElementById('startQuestion').value);
@@ -432,6 +503,12 @@
             case 'Home':
                 startSpeechRecognitionFront();
                 break;
+            case 'Insert':
+                markAsDifficult();
+                break;
+            case 'Delete':
+                removeFromDifficult();
+                break;
             default:
                 break;
         }
@@ -468,7 +545,20 @@
         }, 2000);
     }
 
-    function playPronunciation(text) {
+    let isSlowPronunciation = false; // Biến để theo dõi trạng thái phát âm chậm
+
+function toggleSlowPronunciation() {
+    isSlowPronunciation = !isSlowPronunciation;
+    const button = document.getElementById('slowPronunciationButton');
+    button.innerText = isSlowPronunciation ? "Tắt Phát Âm Chậm" : "Phát Âm Chậm";
+    if (isSlowPronunciation) {
+        alert("Chế độ phát âm chậm đã bật.");
+    } else {
+        alert("Chế độ phát âm chậm đã tắt.");
+    }
+}
+
+function playPronunciation(text) {
     currentPronunciationText = text; // Lưu lại câu vừa phát âm
     if (audio) {
         audio.stop(); // Dừng âm thanh nếu đang chơi
@@ -482,6 +572,7 @@
         audio = new Howl({
             src: [audioFilePath],
             html5: true,
+            rate: isSlowPronunciation ? 0.70 : 1, // Điều chỉnh tốc độ phát
             onend: function () {
                 if (autoFlip) {
                     autoFlipLogic();
@@ -497,16 +588,15 @@
     }
 }
 
-
-    function repeatPronunciation() {
-        if (currentPronunciationText) {
-            playPronunciation(currentPronunciationText);
-        } else {
-            const word = vocabList[currentIndex];
-            const textToPlay = isFront ? word[0] : word[3];
-            playPronunciation(textToPlay);
-        }
+function repeatPronunciation() {
+    if (currentPronunciationText) {
+        playPronunciation(currentPronunciationText);
+    } else {
+        const word = vocabList[currentIndex];
+        const textToPlay = isFront ? word[0] : word[3];
+        playPronunciation(textToPlay);
     }
+}
 
     function autoFlipLogic() {
         autoFlipTimeout = setTimeout(() => {
@@ -613,7 +703,6 @@ function checkAnswerBack() {
     }
 }
 
-
     function startSpeechRecognition() {
         if (!('webkitSpeechRecognition' in window)) {
             alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
@@ -658,30 +747,64 @@ function checkAnswerBack() {
         }
     }
 
-    function startSpeechRecognitionFront() {
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
-            return;
+    // Throttle function to prevent rapid invocation
+function throttle(callback, limit) {
+    var waiting = false;
+    return function () {
+        if (!waiting) {
+            callback.apply(this, arguments);
+            waiting = true;
+            setTimeout(function () {
+                waiting = false;
+            }, limit);
         }
-        const recognitionFront = new webkitSpeechRecognition();
-        recognitionFront.lang = 'en-US';
-        recognitionFront.interimResults = false;
-        recognitionFront.maxAlternatives = 1;
-        recognitionFront.start();
-        recognitionFront.onresult = function(event) {
-            const speechResult = event.results[0][0].transcript;
-            document.getElementById('recognizedSpeech').textContent = speechResult;
-            document.getElementById('speechResult').style.display = 'block';
-            checkSpeechAnswerFront(speechResult);
-        };
-        recognitionFront.onerror = function(event) {
-            console.error("Lỗi nhận diện giọng nói: ", event.error);
-            alert("Có lỗi xảy ra khi nhận diện giọng nói. Vui lòng thử lại.");
-        };
-        recognitionFront.onend = function() {
-            // Xử lý khi nhận diện kết thúc nếu cần
-        };
+    };
+}
+
+function startSpeechRecognitionFront() {
+    if (!('webkitSpeechRecognition' in window)) {
+        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
+        return;
     }
+    if (window.recognition && window.recognition.isRecognitionActive) {
+        console.log("Recognition is already active.");
+        return;
+    }
+    
+    const recognition = new webkitSpeechRecognition();
+    window.recognition = recognition; // Store recognition globally to manage state
+    recognition.isRecognitionActive = true;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = function(event) {
+        const speechResult = event.results[0][0].transcript;
+        document.getElementById('recognizedSpeech').textContent = speechResult;
+        document.getElementById('speechResult').style.display = 'block';
+        checkSpeechAnswerFront(speechResult);
+        recognition.stop();
+    };
+
+    recognition.onerror = function(event) {
+        console.error("Lỗi nhận diện giọng nói: ", event.error);
+        alert("Có lỗi xảy ra khi nhận diện giọng nói. Vui lòng thử lại.");
+        recognition.isRecognitionActive = false;
+    };
+
+    recognition.onend = function() {
+        recognition.isRecognitionActive = false;
+        console.log("Recognition ended.");
+    };
+
+    recognition.start();
+    console.log("Started speech recognition.");
+}
+
+// Attach event listeners with throttling
+document.getElementById('speakCheckFrontButton').addEventListener('click', throttle(function() {
+    startSpeechRecognitionFront();
+}, 3000)); // Adjust the throttle limit as necessary
 
     function checkSpeechAnswerFront(speechResult) {
         const word = vocabList[currentIndex];
@@ -712,6 +835,7 @@ function checkAnswerBack() {
     // Load danh sách bài học từ json_list.json khi trang được tải
     window.onload = function () {
         loadLessonList();
+        loadDifficultWords(); // Tải danh sách câu khó
     };
 </script>
 </body>
