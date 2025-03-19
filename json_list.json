@@ -11,9 +11,19 @@
             "audio": "audio_read_write_TQT"
         },
         {
-            "name": "GiaoTiepMy01.json",
-            "mapping": "mapping_GiaoTiepMy01.json",
-            "audio": "audio_GiaoTiepMy01"
+            "name": "dam_thoai_01.json",
+            "mapping": "mapping_dam_thoai_01.json",
+            "audio": "audio_dam_thoai_01"
+        },
+        {
+            "name": "dam_thoại_02.json",
+            "mapping": "mapping_dam_thoại_02.json",
+            "audio": "audio_dam_thoại_02"
+        },
+        {
+            "name": "dam_thoai_03.json",
+            "mapping": "mapping_dam_thoai_03.json",
+            "audio": "audio_dam_thoai_03"
         }
     ]
 }
