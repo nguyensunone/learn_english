@@ -1,0 +1,330 @@
+[
+    {
+        "text": "What is your full name?",
+        "file": "audio_TQT_personal/audio_TQT_personal_1_col0.mp3"
+    },
+    {
+        "text": "My full name is Thi Kim Quyen Le.",
+        "file": "audio_TQT_personal/audio_TQT_personal_1_col3.mp3"
+    },
+    {
+        "text": "What is your current address?",
+        "file": "audio_TQT_personal/audio_TQT_personal_2_col0.mp3"
+    },
+    {
+        "text": "It's 3311 Kifer Rd Apt 212 Santa Clara.",
+        "file": "audio_TQT_personal/audio_TQT_personal_2_col3.mp3"
+    },
+    {
+        "text": "What is your phone number?",
+        "file": "audio_TQT_personal/audio_TQT_personal_3_col0.mp3"
+    },
+    {
+        "text": "My phone number is 408 594 8589.",
+        "file": "audio_TQT_personal/audio_TQT_personal_3_col3.mp3"
+    },
+    {
+        "text": "What is your email address?",
+        "file": "audio_TQT_personal/audio_TQT_personal_4_col0.mp3"
+    },
+    {
+        "text": "My email address is ltkquyen@gmail.com",
+        "file": "audio_TQT_personal/audio_TQT_personal_4_col3.mp3"
+    },
+    {
+        "text": "Where were you born?",
+        "file": "audio_TQT_personal/audio_TQT_personal_5_col0.mp3"
+    },
+    {
+        "text": "I was born in Hue, Vietnam.",
+        "file": "audio_TQT_personal/audio_TQT_personal_5_col3.mp3"
+    },
+    {
+        "text": "What is your spouse's name?",
+        "file": "audio_TQT_personal/audio_TQT_personal_6_col0.mp3"
+    },
+    {
+        "text": "My spouse's name is Duy Minh Nhat Nguyen.",
+        "file": "audio_TQT_personal/audio_TQT_personal_6_col3.mp3"
+    },
+    {
+        "text": "When did you become a permanent resident?",
+        "file": "audio_TQT_personal/audio_TQT_personal_7_col0.mp3"
+    },
+    {
+        "text": "I became a permanent resident on 05/09/2000",
+        "file": "audio_TQT_personal/audio_TQT_personal_7_col3.mp3"
+    },
+    {
+        "text": "What is your date of birth?",
+        "file": "audio_TQT_personal/audio_TQT_personal_8_col0.mp3"
+    },
+    {
+        "text": "My date of birth is 02/07/1960.",
+        "file": "audio_TQT_personal/audio_TQT_personal_8_col3.mp3"
+    },
+    {
+        "text": "When did you get married?",
+        "file": "audio_TQT_personal/audio_TQT_personal_9_col0.mp3"
+    },
+    {
+        "text": "I got married on 10/22/1983.",
+        "file": "audio_TQT_personal/audio_TQT_personal_9_col3.mp3"
+    },
+    {
+        "text": "Where did you get married?",
+        "file": "audio_TQT_personal/audio_TQT_personal_10_col0.mp3"
+    },
+    {
+        "text": "I got married in Ho Chi Minh City, Vietnam.",
+        "file": "audio_TQT_personal/audio_TQT_personal_10_col3.mp3"
+    },
+    {
+        "text": "How long have you lived at your current address?",
+        "file": "audio_TQT_personal/audio_TQT_personal_11_col0.mp3"
+    },
+    {
+        "text": "I have lived there for over three years.",
+        "file": "audio_TQT_personal/audio_TQT_personal_11_col3.mp3"
+    },
+    {
+        "text": "Where do you work?",
+        "file": "audio_TQT_personal/audio_TQT_personal_12_col0.mp3"
+    },
+    {
+        "text": "I work at home.",
+        "file": "audio_TQT_personal/audio_TQT_personal_12_col3.mp3"
+    },
+    {
+        "text": "Do you have any children?",
+        "file": "audio_TQT_personal/audio_TQT_personal_13_col0.mp3"
+    },
+    {
+        "text": "Yes, I have 4 children.",
+        "file": "audio_TQT_personal/audio_TQT_personal_13_col3.mp3"
+    },
+    {
+        "text": "How did you get your Green Card?",
+        "file": "audio_TQT_personal/audio_TQT_personal_14_col0.mp3"
+    },
+    {
+        "text": "I got my Green Card through family.",
+        "file": "audio_TQT_personal/audio_TQT_personal_14_col3.mp3"
+    },
+    {
+        "text": "Do you pay your taxes every year?",
+        "file": "audio_TQT_personal/audio_TQT_personal_15_col0.mp3"
+    },
+    {
+        "text": "Yes, my husband and I file taxes jointly every year.",
+        "file": "audio_TQT_personal/audio_TQT_personal_15_col3.mp3"
+    },
+    {
+        "text": "How many children do you have?",
+        "file": "audio_TQT_personal/audio_TQT_personal_16_col0.mp3"
+    },
+    {
+        "text": "I have 4 children.",
+        "file": "audio_TQT_personal/audio_TQT_personal_16_col3.mp3"
+    },
+    {
+        "text": "What is your country of birth?",
+        "file": "audio_TQT_personal/audio_TQT_personal_17_col0.mp3"
+    },
+    {
+        "text": "My country of birth is Vietnam.",
+        "file": "audio_TQT_personal/audio_TQT_personal_17_col3.mp3"
+    },
+    {
+        "text": "What is your nationality?",
+        "file": "audio_TQT_personal/audio_TQT_personal_18_col0.mp3"
+    },
+    {
+        "text": "My nationality is Vietnam.",
+        "file": "audio_TQT_personal/audio_TQT_personal_18_col3.mp3"
+    },
+    {
+        "text": "What is your occupation?",
+        "file": "audio_TQT_personal/audio_TQT_personal_19_col0.mp3"
+    },
+    {
+        "text": "I am a homemaker.",
+        "file": "audio_TQT_personal/audio_TQT_personal_19_col3.mp3"
+    },
+    {
+        "text": "Where do your children live?",
+        "file": "audio_TQT_personal/audio_TQT_personal_20_col0.mp3"
+    },
+    {
+        "text": "Three girls live in Vietnam. One boy studying America.",
+        "file": "audio_TQT_personal/audio_TQT_personal_20_col3.mp3"
+    },
+    {
+        "text": "Do you have any other names?",
+        "file": "audio_TQT_personal/audio_TQT_personal_21_col0.mp3"
+    },
+    {
+        "text": "No, I don't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_21_col3.mp3"
+    },
+    {
+        "text": "Are you married?",
+        "file": "audio_TQT_personal/audio_TQT_personal_22_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_22_col3.mp3"
+    },
+    {
+        "text": "Have you ever applied for citizenship before?",
+        "file": "audio_TQT_personal/audio_TQT_personal_23_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_23_col3.mp3"
+    },
+    {
+        "text": "Have you ever traveled outside the U.S. in the past five years?",
+        "file": "audio_TQT_personal/audio_TQT_personal_24_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_24_col3.mp3"
+    },
+    {
+        "text": "Have you ever failed to file your taxes?",
+        "file": "audio_TQT_personal/audio_TQT_personal_25_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_25_col3.mp3"
+    },
+    {
+        "text": "Have you ever been arrested?",
+        "file": "audio_TQT_personal/audio_TQT_personal_26_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_26_col3.mp3"
+    },
+    {
+        "text": "Have you ever been convicted of a crime?",
+        "file": "audio_TQT_personal/audio_TQT_personal_27_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_27_col3.mp3"
+    },
+    {
+        "text": "Have you ever been in jail or prison?",
+        "file": "audio_TQT_personal/audio_TQT_personal_28_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_28_col3.mp3"
+    },
+    {
+        "text": "Have you ever been a member of any organization, group, or club?",
+        "file": "audio_TQT_personal/audio_TQT_personal_29_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_29_col3.mp3"
+    },
+    {
+        "text": "Have you ever served in the U.S. military?",
+        "file": "audio_TQT_personal/audio_TQT_personal_30_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_30_col3.mp3"
+    },
+    {
+        "text": "Do you support the U.S. Constitution?",
+        "file": "audio_TQT_personal/audio_TQT_personal_31_col0.mp3"
+    },
+    {
+        "text": "Yes, I do.",
+        "file": "audio_TQT_personal/audio_TQT_personal_31_col3.mp3"
+    },
+    {
+        "text": "Are you willing to take the Oath of Allegiance to the United States?",
+        "file": "audio_TQT_personal/audio_TQT_personal_32_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_32_col3.mp3"
+    },
+    {
+        "text": "If the law requires it, are you willing to serve in the U.S. military?",
+        "file": "audio_TQT_personal/audio_TQT_personal_33_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_33_col3.mp3"
+    },
+    {
+        "text": "If the law requires it, are you willing to perform noncombatant services for the U.S. military?",
+        "file": "audio_TQT_personal/audio_TQT_personal_34_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_34_col3.mp3"
+    },
+    {
+        "text": "If the law requires it, are you willing to help the government during a national emergency?",
+        "file": "audio_TQT_personal/audio_TQT_personal_35_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_35_col3.mp3"
+    },
+    {
+        "text": "Have you ever voted in a U.S. election?",
+        "file": "audio_TQT_personal/audio_TQT_personal_36_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_36_col3.mp3"
+    },
+    {
+        "text": "Have you traveled outside the U.S. in the last 5 years?",
+        "file": "audio_TQT_personal/audio_TQT_personal_37_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_37_col3.mp3"
+    },
+    {
+        "text": "Have you used any other names?",
+        "file": "audio_TQT_personal/audio_TQT_personal_38_col0.mp3"
+    },
+    {
+        "text": "No, I haven't.",
+        "file": "audio_TQT_personal/audio_TQT_personal_38_col3.mp3"
+    },
+    {
+        "text": "If the law requires it, are you willing to help the government during a national emergency?",
+        "file": "audio_TQT_personal/audio_TQT_personal_39_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_39_col3.mp3"
+    },
+    {
+        "text": "If the law requires it, are you willing to perform noncombatant services for the U.S. military?",
+        "file": "audio_TQT_personal/audio_TQT_personal_40_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_40_col3.mp3"
+    },
+    {
+        "text": "If the law requires it, are you willing to serve in the U.S. military?",
+        "file": "audio_TQT_personal/audio_TQT_personal_41_col0.mp3"
+    },
+    {
+        "text": "Yes, I am.",
+        "file": "audio_TQT_personal/audio_TQT_personal_41_col3.mp3"
+    }
+]

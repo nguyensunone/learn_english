@@ -29,6 +29,11 @@
             "name": "TQT_read_write.json",
             "mapping": "mapping_TQT_read_write.json",
             "audio": "audio_TQT_read_write"
+        },
+        {
+            "name": "TQT_personal.json",
+            "mapping": "mapping_TQT_personal.json",
+            "audio": "audio_TQT_personal"
         }
     ]
 }
