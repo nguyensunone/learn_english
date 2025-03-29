@@ -345,38 +345,50 @@
     }
 
     function nextWord() {
-        if (vocabList.length === 0) return;
-        clearTimeout(autoFlipTimeout);
+    if (vocabList.length === 0) return;
+    clearTimeout(autoFlipTimeout);
 
-        if (isRandomMode) {
-            // Nếu đã hỏi hết tất cả câu
-            if (askedIndices.length >= vocabList.length) {
-                if (!isRandomCycleComplete) {
-                    alert("Đã hoàn thành 1 vòng ngẫu nhiên!\nTự động bắt đầu vòng mới.");
-                }
-                askedIndices = [];
-                isRandomCycleComplete = true;
+    if (isRandomMode) {
+        if (askedIndices.length >= vocabList.length) {
+            if (!isRandomCycleComplete) {
+                alert("Đã hoàn thành 1 vòng ngẫu nhiên!\nTự động bắt đầu vòng mới.");
             }
-
-            // Lọc các câu chưa hỏi
-            const availableIndices = [];
-            for (let i = 0; i < vocabList.length; i++) {
-                if (!askedIndices.includes(i)) {
-                    availableIndices.push(i);
-                }
-            }
-
-            // Chọn ngẫu nhiên từ các câu chưa hỏi
-            currentIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-            askedIndices.push(currentIndex);
-        } else {
-            // Chế độ thứ tự bình thường
-            currentIndex = (currentIndex + 1) % vocabList.length;
+            askedIndices = [];
+            isRandomCycleComplete = true;
         }
 
-        isFront = true;
-        displayWord();
+        const availableIndices = [];
+        for (let i = 0; i < vocabList.length; i++) {
+            if (!askedIndices.includes(i)) {
+                availableIndices.push(i);
+            }
+        }
+
+        currentIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+        askedIndices.push(currentIndex);
+    } else {
+        currentIndex = (currentIndex + 1) % vocabList.length;
     }
+
+    isFront = true;
+    displayWord();
+    
+    // Nếu đang ở chế độ auto flip, phát âm thanh ngay
+    if (autoFlip) {
+        const word = vocabList[currentIndex];
+        playPronunciation(word[0]);
+    }
+}
+
+function flipCard() {
+    isFront = !isFront;
+    displayWord();
+    
+    // Phát âm thanh mặt mới và xử lý auto flip
+    const word = vocabList[currentIndex];
+    const textToPlay = isFront ? word[0] : word[3];
+    playPronunciation(textToPlay);
+}
 
     // --- Sửa hàm prevWord ---
     function prevWord() {
@@ -590,35 +602,69 @@ function toggleSlowPronunciation() {
 }
 
 function playPronunciation(text) {
-    currentPronunciationText = text; // Lưu lại câu vừa phát âm
+    currentPronunciationText = text;
     if (audio) {
-        audio.stop(); // Dừng âm thanh nếu đang chơi
+        audio.stop();
+        audio.unload(); // Giải phóng tài nguyên âm thanh cũ
     }
 
-    // Tìm file âm thanh tương ứng trong audioMapping
     const audioEntry = audioMapping.find(item => item.text === text);
     if (audioEntry) {
-        // Thêm tiền tố "LESSON/" cho đường dẫn file âm thanh
         const audioFilePath = "LESSON/" + audioEntry.file;
         audio = new Howl({
             src: [audioFilePath],
             html5: true,
-            rate: isSlowPronunciation ? 0.80 : 1, // Điều chỉnh tốc độ phát
-            onend: function () {
+            rate: isSlowPronunciation ? 0.75 : 1, // Giảm tốc độ hơn nếu cần
+            onload: function() {
+                // Bắt đầu phát âm thanh khi đã load xong
+                audio.play();
+                
+                // Xử lý auto flip
                 if (autoFlip) {
-                    autoFlipLogic();
+                    clearTimeout(autoFlipTimeout);
+                    const duration = audio.duration() * 1000; // Thời lượng âm thanh (ms)
+                    const bufferTime = 2000; // Thêm 2 giây buffer
+                    
+                    // Đặt thời gian chờ = thời lượng âm thanh + buffer
+                    autoFlipTimeout = setTimeout(() => {
+                        if (!isFront) {
+                            nextWord();
+                        } else {
+                            flipCard();
+                        }
+                    }, duration + bufferTime);
                 }
             },
-            onloaderror: function () {
-                console.log("Lỗi phát âm thanh từ file local.");
+            onend: function() {
+                console.log('Phát âm hoàn tất');
+            },
+            onloaderror: function(id, error) {
+                console.error("Lỗi phát âm thanh:", error);
+                if (autoFlip) {
+                    // Nếu có lỗi, chuyển sau 5 giây mặc định
+                    autoFlipTimeout = setTimeout(() => {
+                        if (!isFront) {
+                            nextWord();
+                        } else {
+                            flipCard();
+                        }
+                    }, 5000);
+                }
             }
         });
-        audio.play();
     } else {
-        console.log("Không tìm thấy file âm thanh cho từ:", text);
+        console.log("Không tìm thấy file âm thanh cho:", text);
+        if (autoFlip) {
+            autoFlipTimeout = setTimeout(() => {
+                if (!isFront) {
+                    nextWord();
+                } else {
+                    flipCard();
+                }
+            }, 5000);
+        }
     }
 }
-
 
 function repeatPronunciation() {
     if (currentPronunciationText) {
@@ -630,19 +676,31 @@ function repeatPronunciation() {
     }
 }
 
-    function autoFlipLogic() {
+function autoFlipLogic() {
+    if (audio) {
+        // Đợi âm thanh phát xong hoặc hết thời gian tối đa
+        const audioDuration = audio.duration() * 1000; // chuyển sang mili giây
+        const maxWaitTime = Math.max(audioDuration, 5000); // Lấy thời gian lớn hơn giữa độ dài audio và 5 giây
+        
+        autoFlipTimeout = setTimeout(() => {
+            flipCard();
+            // Đợi âm thanh mặt sau phát xong trước khi chuyển thẻ tiếp
+            setTimeout(() => {
+                if (audio) {
+                    audio.once('end', nextWord);
+                } else {
+                    nextWord();
+                }
+            }, 1000); // Thêm độ trễ nhỏ để đảm bảo
+        }, maxWaitTime);
+    } else {
+        // Xử lý khi không có audio
         autoFlipTimeout = setTimeout(() => {
             flipCard();
             setTimeout(nextWord, 5000);
         }, 5000);
     }
-
-    function flipCard() {
-        isFront = !isFront;
-        displayWord();
-        const word = vocabList[currentIndex];
-        currentPronunciationText = isFront ? word[0] : word[3];
-    }
+}
 
     function flipCardToBack() {
         isFront = false;
@@ -650,20 +708,23 @@ function repeatPronunciation() {
     }
 
     function toggleAutoFlip() {
-        autoFlip = !autoFlip;
-        const button = document.getElementById('autoFlipButton');
-        button.innerText = autoFlip ? "Tắt Tự Động" : "Tự Động";
-        if (autoFlip) {
-            alert("Chế độ tự động đã bật.");
-            autoFlipLogic();
-        } else {
-            alert("Chế độ tự động đã tắt.");
-            clearTimeout(autoFlipTimeout);
-            if (audio) {
-                audio.stop();
-            }
+    autoFlip = !autoFlip;
+    const button = document.getElementById('autoFlipButton');
+    button.innerText = autoFlip ? "Tắt Tự Động" : "Tự Động";
+    
+    if (autoFlip) {
+        clearTimeout(autoFlipTimeout);
+        // Bắt đầu auto flip ngay lập tức
+        const word = vocabList[currentIndex];
+        const textToPlay = isFront ? word[0] : word[3];
+        playPronunciation(textToPlay);
+    } else {
+        clearTimeout(autoFlipTimeout);
+        if (audio) {
+            audio.stop();
         }
     }
+}
 
     function removePunctuation(text) {
         return text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, '').replace(/\s{2,}/g, ' ');
