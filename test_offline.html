@@ -237,8 +237,8 @@
 <select id="lessonSelector" onchange="loadLesson()">
     <!-- Các tùy chọn sẽ được thêm tự động từ json_list.json -->
 </select>
-<input type="number" id="startQuestion" placeholder="Bắt đầu" min="1" max="138">
-<input type="number" id="questionCount" placeholder="Tổng số" min="1" max="138">
+<input type="number" id="startQuestion" placeholder="Bắt đầu" min="1" max="200">
+<input type="number" id="questionCount" placeholder="Tổng số" min="1" max="200">
 <button onclick="startSession()">Bắt Đầu Phiên Học</button>
  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -325,12 +325,12 @@
     function startSession() {
         const startQuestion = parseInt(document.getElementById('startQuestion').value);
         const questionCount = parseInt(document.getElementById('questionCount').value) || 10;
-        if (isNaN(startQuestion) || startQuestion < 1 || startQuestion > 138) {
-            alert("Vui lòng nhập số câu hỏi bắt đầu từ 1 đến 138.");
+        if (isNaN(startQuestion) || startQuestion < 1 || startQuestion > 200) {
+            alert("Vui lòng nhập số câu hỏi bắt đầu từ 1 đến 200.");
             return;
         }
-        if (isNaN(questionCount) || questionCount < 1 || questionCount > 138) {
-            alert("Vui lòng nhập số câu hỏi hợp lệ (tối đa 138).");
+        if (isNaN(questionCount) || questionCount < 1 || questionCount > 200) {
+            alert("Vui lòng nhập số câu hỏi hợp lệ (tối đa 200).");
             return;
         }
         sessionStartIndex = startQuestion - 1;
@@ -726,9 +726,13 @@ function autoFlipLogic() {
     }
 }
 
-    function removePunctuation(text) {
-        return text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, '').replace(/\s{2,}/g, ' ');
-    }
+function removePunctuation(text) {  
+    return text  
+        .replace(/[-]/g, ' ') // Thay thế dấu gạch nối bằng dấu cách  
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, '') // Loại bỏ các ký tự khác  
+        .replace(/\s{2,}/g, ' ') // Thay thế nhiều dấu cách thành một dấu cách  
+        .trim(); // Loại bỏ dấu cách thừa ở đầu và cuối chuỗi  
+}  
 
     function showNotification(message, isCorrect, userAnswer = "", correctAnswer = "") {
     const notification = document.getElementById('notification');
