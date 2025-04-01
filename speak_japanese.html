@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🇯🇵 Vocab App: 6-cột + Audio + Nói</title>
+  <script src="kuromoji.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <style>
+    :root {
+      --bg-color: #1e1e1e;
+      --card-bg: #2b2b2b;
+      --primary-color: #61dafb;
+      --primary-hover: #21a1f1;
+      --text-color: #e0e0e0;
+      --input-bg: #2c2c2c;
+      --correct-color: #4caf50;
+      --incorrect-color: #f44336;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Noto Sans JP', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    h2 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    
+    select, textarea, button {
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      padding: 12px 15px;
+      margin: 8px 0;
+      width: 100%;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+    
+    select {
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2361dafb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px;
+    }
+    
+    textarea {
+      background: var(--input-bg);
+      color: white;
+      min-height: 60px;
+      resize: vertical;
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: var(--bg-color);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    
+    .card {
+      padding: 20px;
+      border-radius: 10px;
+      background: var(--card-bg);
+      margin: 20px 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+    
+    #jp {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    
+    #romaji {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #a5d8ff;
+      font-style: italic;
+    }
+    
+    #vietnamese {
+      font-size: 22px;
+      font-weight: 500;
+    }
+    
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 15px 0;
+    }
+    
+    .button-group-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin: 15px 0;
+    }
+    
+    #recognizedSpeech {
+      display: block;
+      padding: 10px;
+      background: rgba(97, 218, 251, 0.1);
+      border-radius: 6px;
+      margin-top: 10px;
+      color: lightgreen;
+      font-size: 18px;
+    }
+    
+    .feedback {
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .correct {
+      background-color: rgba(76, 175, 80, 0.2);
+      color: var(--correct-color);
+    }
+    
+    .incorrect {
+      background-color: rgba(244, 67, 54, 0.2);
+      color: var(--incorrect-color);
+    }
+    
+    @media (max-width: 600px) {
+      .button-group, .button-group-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      #jp {
+        font-size: 24px;
+      }
+      
+      #romaji {
+        font-size: 18px;
+      }
+      
+      #vietnamese {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>📘 Học từ vựng (6 cột): Viết + Nói + Âm thanh</h2>
+
+  <select id="lessonSelector" onchange="loadLesson()"></select>
+
+  <div class="card" id="cardDisplay">
+    <div id="jp"></div>
+    <div id="romaji"></div>
+    <div id="vietnamese"></div>
+  </div>
+
+  <textarea id="answerInput" placeholder="Gõ hoặc nói (mặt đang hiển thị)..."></textarea>
+  
+  <div class="button-group">
+    <button onclick="flipCard()">🔄 Lật thẻ</button>
+    <button onclick="isV1=true;isV2=false;startSpeech()">🎤 Nói V1</button>
+    <button onclick="isV1=false;isV2=true;startSpeech()">🎤 Nói V2</button>
+  </div>
+  
+  <div class="button-group-2">
+    <button onclick="checkAnswer()">✅ Kiểm tra</button>
+    <button onclick="next()">➡️ Tiếp</button>
+  </div>
+  
+  <button onclick="repeatAudio()" style="width: 100%;">🔁 Nghe lại</button>
+  
+  <p><strong>Nhận dạng giọng nói:</strong></p>
+  <div id="recognizedSpeech"></div>
+  <div id="feedback" class="feedback" style="display: none;"></div>
+
+  <script>
+    let lessons = [];
+    let vocabList = [];
+    let audioMapping = [];
+    let currentIndex = 0;
+    let isFront = true;
+    let globalTokenizer = null;
+    let currentAudioFolder = "";
+    let audio;
+    let isV1 = true, isV2 = false;
+
+    function katakanaToHiragana(str) {
+      return str.replace(/[ァ-ヺ]/g, ch =>
+        String.fromCharCode(ch.charCodeAt(0) - 0x60));
+    }
+
+    function convertToHiraganaWithKuromoji(text, callback) {
+      if (globalTokenizer) {
+        const tokens = globalTokenizer.tokenize(text);
+        const hira = tokens.map(t => t.reading ? katakanaToHiragana(t.reading) : t.surface_form).join('');
+        callback(hira);
+      } else {
+        kuromoji.builder({ dicPath: './dict' }).build((err, tokenizer) => {
+          if (err) return callback(text);
+          globalTokenizer = tokenizer;
+          convertToHiraganaWithKuromoji(text, callback);
+        });
+      }
+    }
+
+    function startSpeech() {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'ja-JP';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = function(event) {
+        const raw = event.results[0][0].transcript;
+        convertToHiraganaWithKuromoji(raw, function(result) {
+          document.getElementById('recognizedSpeech').textContent = result;
+          document.getElementById("answerInput").value = result;
+        });
+      };
+      recognition.start();
+    }
+
+    function loadLesson() {
+      const selected = document.getElementById("lessonSelector").value;
+      const meta = lessons.find(l => l.name === selected);
+      if (!meta) return;
+      currentAudioFolder = meta.audio;
+
+      fetch("LESSON/" + meta.name)
+        .then(r => r.json())
+        .then(data => {
+          vocabList = data;
+          currentIndex = 0;
+          showCard();
+        });
+
+      fetch("LESSON/" + meta.mapping)
+        .then(r => r.json())
+        .then(map => audioMapping = map);
+    }
+
+    function showCard() {
+      const word = vocabList[currentIndex];
+      const [jp, romaji, vi, jp2, romaji2, vi2] = word;
+      const side = isFront ? [jp, romaji, vi] : [jp2, romaji2, vi2];
+      document.getElementById("jp").textContent = side[0];
+      document.getElementById("romaji").textContent = side[1];
+      document.getElementById("vietnamese").textContent = side[2];
+      playAudio(side[0]);
+      document.getElementById("answerInput").value = "";
+      document.getElementById("feedback").style.display = "none";
+    }
+
+    function playAudio(text) {
+      const match = audioMapping.find(x => x.text === text);
+      if (match) {
+        audio = new Howl({ src: ["LESSON/" + match.file], html5: true });
+        audio.play();
+      }
+    }
+
+    function repeatAudio() {
+      if (audio) audio.play();
+    }
+
+    function flipCard() {
+      isFront = !isFront;
+      showCard();
+    }
+
+    function next() {
+      currentIndex = (currentIndex + 1) % vocabList.length;
+      isFront = true;
+      showCard();
+    }
+
+    function normalize(text) {
+      return text.toLowerCase().trim().replace(/[。、！!？?"'「」『』]/g, "").replace(/\s+/g, " ");
+    }
+
+    function checkAnswer() {
+      const word = vocabList[currentIndex];
+      const expected = isFront ? word[0] : word[3];
+      const user = normalize(document.getElementById("answerInput").value);
+      const correct = normalize(expected);
+      
+      const feedback = document.getElementById("feedback");
+      feedback.style.display = "block";
+      
+      if (user === correct) {
+        feedback.textContent = "✅ Chính xác!";
+        feedback.className = "feedback correct";
+      } else {
+        feedback.textContent = `❌ Sai! Đúng là: ${expected}`;
+        feedback.className = "feedback incorrect";
+      }
+    }
+
+    window.onload = function() {
+      fetch("json_list.json").then(res => res.json()).then(data => {
+        lessons = data.lessons;
+        const list = document.getElementById("lessonSelector");
+        list.innerHTML = "";
+        lessons.forEach(l => {
+          const opt = document.createElement("option");
+          opt.value = l.name;
+          opt.textContent = l.name.replace(".json", "");
+          list.appendChild(opt);
+        });
+        if (lessons.length > 0) loadLesson();
+      });
+    };
+  </script>
+</body>
+</html>
