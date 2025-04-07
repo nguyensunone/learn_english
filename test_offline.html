@@ -222,7 +222,6 @@
 </head>
 <body>
 <a href="help.html" style="position: fixed; top: 20px; right: 20px; padding: 10px; background-color: #61dafb; color: #282c34; text-decoration: none; border-radius: 4px;">Help / Trợ giúp</a>
-<a href="read_write.html" style="position: fixed; top: 20px; left: 20px; padding: 10px; background-color: #61dafb; color: #282c34; text-decoration: none; border-radius: 4px;">Read / Write</a>
 
 <div style="text-align: center;">
     <div id="questionCounter">Câu hỏi: 0/0</div>
@@ -820,176 +819,135 @@ function removePunctuation(text) {
     }
 
     function checkAnswer() {
-        const answerInput = document.getElementById('answerInput');
-        const userAnswer = removePunctuation(answerInput.value.toString().trim().toLowerCase());
-        const word = vocabList[currentIndex];
-        const expectedText = isFront ? word[0] : word[3];
-        const normalizedExpectedText = removePunctuation(expectedText.toString().trim().toLowerCase());
+    const answerInput = document.getElementById('answerInput');
+    const userAnswer = removePunctuation(answerInput.value.toString().trim().toLowerCase());
+    const word = vocabList[currentIndex];
+    const expectedText = isFront ? word[0] : word[3];
+    const normalizedExpectedText = removePunctuation(expectedText.toString().trim().toLowerCase());
 
-        if (userAnswer === normalizedExpectedText) {
-            showNotification("Đúng!", true);
-            
-            // Phát âm thanh và chỉ chuyển khi phát xong
-            playPronunciation(expectedText);
-            if (audio) {
-                audio.once('end', function() {
-                    setTimeout(() => {
-                        if (isFront) {
-                            flipCard();
-                        } else {
-                            nextWord();
-                        }
-                    }, 1000); // Thêm 1 giây buffer sau khi âm thanh kết thúc
-                });
-            } else {
-                // Nếu không có âm thanh, chờ 4 giây mặc định
-                setTimeout(() => {
-                    if (isFront) {
-                        flipCard();
-                    } else {
-                        nextWord();
-                    }
-                }, 4000);
-            }
-            
-        } else {
-            showNotification("Sai!", false, userAnswer, normalizedExpectedText);
-            playPronunciation(expectedText);
-        }
-        answerInput.value = '';
-    }
-
-    function checkAnswerBack() {
-        const currentExample = removePunctuation(vocabList[currentIndex][3].toString().trim().toLowerCase());
-        const userAnswerBack = removePunctuation(document.getElementById("writingCheckBack").value.trim().toLowerCase());
-        document.getElementById("writingCheckBack").value = "";
-
-        if (userAnswerBack === currentExample) {
-            showNotification("Đúng!", true);
-            document.getElementById('vocabLabel').innerHTML = `
-                <div class="card">
-                    <span class="example">${vocabList[currentIndex][3]}</span><br>
-                    <span class="example_ipa">${vocabList[currentIndex][4]}</span><br>
-                    <span class="example_vi">${vocabList[currentIndex][5]}</span>
-                </div>
-            `;
-            
-            // Phát âm thanh và chỉ chuyển khi phát xong
-            playPronunciation(vocabList[currentIndex][3]);
-            if (audio) {
-                audio.once('end', function() {
-                    setTimeout(() => {
-                        nextWord();
-                    }, 1000); // Thêm 1 giây buffer
-                });
-            } else {
-                setTimeout(() => {
-                    nextWord();
-                }, 4000);
-            }
-            
-        } else {
-            document.getElementById('vocabLabel').innerHTML = `
-                <div class="card">
-                    <span class="example">${vocabList[currentIndex][3]}</span><br>
-                    <span class="example_ipa">${vocabList[currentIndex][4]}</span><br>
-                    <span class="example_vi">${vocabList[currentIndex][5]}</span>
-                    <div class="wrong-answer-container">
-                        <div class="wrong-answer">Bạn viết: ${userAnswerBack}</div>
-                        <div class="correct-answer">Câu đúng: ${currentExample}</div>
-                    </div>
-                </div>
-            `;
-            showNotification("Sai!", false, userAnswerBack, currentExample);
-            playPronunciation(vocabList[currentIndex][3]);
-        }
-    }
-
-    function startSpeechRecognitionFront() {
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
-            return;
-        }
-
-        const activeElement = document.activeElement;
-        const isV1 = activeElement.id === 'answerInput';
-        const isV2 = activeElement.id === 'writingCheckBack';
-
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-
-        recognition.onstart = function() {
-            document.getElementById('recognizedSpeech').textContent = "Đang nghe...";
-            document.getElementById('speechResult').style.display = 'block';
-        };
-
-        recognition.onresult = function(event) {
-            const speechResult = event.results[0][0].transcript;
-            const normalizedSpeechResult = removePunctuation(speechResult.trim().toLowerCase());
-            
-            // Hiển thị vào ô tương ứng nếu có focus
-            if (isV1) {
-                document.getElementById('answerInput').value = speechResult;
-                checkSpeechAnswer(normalizedSpeechResult, true);
-            } else if (isV2) {
-                document.getElementById('writingCheckBack').value = speechResult;
-                checkSpeechAnswer(normalizedSpeechResult, false);
-            } else {
-                // Chỉ hiển thị trong khung speechResult nếu không focus
-                document.getElementById('recognizedSpeech').textContent = speechResult;
-            }
-            
-            recognition.stop();
-        };
-
-        recognition.onerror = function(event) {
-            console.error("Lỗi nhận diện giọng nói: ", event.error);
-            document.getElementById('recognizedSpeech').textContent = "Lỗi: " + event.error;
-            recognition.stop();
-        };
-
-        recognition.start();
-    }
-
-    // Hàm kiểm tra kết quả nhận diện giọng nói
-    function checkSpeechAnswer(userAnswer, isV1Mode) {
-        const word = vocabList[currentIndex];
-        let expectedText, pronunciationText;
+    if (userAnswer === normalizedExpectedText) {
+        showNotification("Đúng!", true);
         
-        if (isV1Mode) {
-            expectedText = removePunctuation(word[0].toString().trim().toLowerCase());
-            pronunciationText = word[0];
-        } else {
-            expectedText = removePunctuation(word[3].toString().trim().toLowerCase());
-            pronunciationText = word[3];
-        }
-
-        if (userAnswer === expectedText) {
-            showNotification("Đúng!", true);
-            playPronunciation(pronunciationText);
-            
-            setTimeout(() => {
-                if (isV1Mode) {
+        // Phát âm thanh và chỉ chuyển khi phát xong
+        playPronunciation(expectedText);
+        if (audio) {
+            audio.once('end', function() {
+                setTimeout(() => {
                     if (isFront) {
                         flipCard();
                     } else {
                         nextWord();
                     }
+                }, 1000); // Thêm 1 giây buffer sau khi âm thanh kết thúc
+            });
+        } else {
+            // Nếu không có âm thanh, chờ 4 giây mặc định
+            setTimeout(() => {
+                if (isFront) {
+                    flipCard();
                 } else {
                     nextWord();
                 }
-            }, 2000);
-        } else {
-            showNotification("Sai!", false, userAnswer, expectedText);
-            playPronunciation(pronunciationText);
-            
-            if (!isV1Mode) {
-                flipCardToBack();
-            }
+            }, 4000);
         }
+        
+    } else {
+        showNotification("Sai!", false, userAnswer, normalizedExpectedText);
+        playPronunciation(expectedText);
     }
+    answerInput.value = '';
+}
+
+function checkAnswerBack() {
+    const currentExample = removePunctuation(vocabList[currentIndex][3].toString().trim().toLowerCase());
+    const userAnswerBack = removePunctuation(document.getElementById("writingCheckBack").value.trim().toLowerCase());
+    document.getElementById("writingCheckBack").value = "";
+
+    if (userAnswerBack === currentExample) {
+        showNotification("Đúng!", true);
+        document.getElementById('vocabLabel').innerHTML = `
+            <div class="card">
+                <span class="example">${vocabList[currentIndex][3]}</span><br>
+                <span class="example_ipa">${vocabList[currentIndex][4]}</span><br>
+                <span class="example_vi">${vocabList[currentIndex][5]}</span>
+            </div>
+        `;
+        
+        // Phát âm thanh và chỉ chuyển khi phát xong
+        playPronunciation(vocabList[currentIndex][3]);
+        if (audio) {
+            audio.once('end', function() {
+                setTimeout(() => {
+                    nextWord();
+                }, 1000); // Thêm 1 giây buffer
+            });
+        } else {
+            setTimeout(() => {
+                nextWord();
+            }, 4000);
+        }
+        
+    } else {
+        document.getElementById('vocabLabel').innerHTML = `
+            <div class="card">
+                <span class="example">${vocabList[currentIndex][3]}</span><br>
+                <span class="example_ipa">${vocabList[currentIndex][4]}</span><br>
+                <span class="example_vi">${vocabList[currentIndex][5]}</span>
+                <div class="wrong-answer-container">
+                    <div class="wrong-answer">Bạn viết: ${userAnswerBack}</div>
+                    <div class="correct-answer">Câu đúng: ${currentExample}</div>
+                </div>
+            </div>
+        `;
+        showNotification("Sai!", false, userAnswerBack, currentExample);
+        playPronunciation(vocabList[currentIndex][3]);
+    }
+}
+
+function startSpeechRecognitionFront() {
+    if (!('webkitSpeechRecognition' in window)) {
+        alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
+        return;
+    }
+
+    const activeElement = document.activeElement;
+    const isV1 = activeElement.id === 'answerInput';
+    const isV2 = activeElement.id === 'writingCheckBack';
+
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function() {
+        document.getElementById('recognizedSpeech').textContent = "Đang nghe...";
+        document.getElementById('speechResult').style.display = 'block';
+    };
+
+    recognition.onresult = function(event) {
+        const speechResult = event.results[0][0].transcript;
+        
+        // Hiển thị vào ô tương ứng nếu có focus
+        if (isV1) {
+            document.getElementById('answerInput').value = speechResult;
+        } else if (isV2) {
+            document.getElementById('writingCheckBack').value = speechResult;
+        }
+        
+        // Luôn hiển thị trong khung speechResult
+        document.getElementById('recognizedSpeech').textContent = speechResult;
+        
+        recognition.stop();
+    };
+
+    recognition.onerror = function(event) {
+        console.error("Lỗi nhận diện giọng nói: ", event.error);
+        document.getElementById('recognizedSpeech').textContent = "Lỗi: " + event.error;
+        recognition.stop();
+    };
+
+    recognition.start();
+}
     
     // Load danh sách bài học từ json_list.json khi trang được tải
     window.onload = function () {
