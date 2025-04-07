@@ -253,7 +253,7 @@
 <div style="text-align: center;">
     <button id="checkAnswerButton" onclick="checkAnswer()">V1</button>
     <button id="checkAnswerBackButton" onclick="checkAnswerBack()">V2</button>
-    <button id="speakCheckFrontButton" onclick="startSpeechRecognitionFront()">Nói</button>    
+    <button id="speakCheckFrontButton" type="button" onclick="startSmartSpeechRecognition()">Nói</button>    
 </div>
 
 <div class="controls"></div>
@@ -295,10 +295,10 @@ function startSmartSpeechRecognition() {
     recognition.onresult = function (event) {
         const speechResult = event.results[0][0].transcript;
 
-        if (currentInputMode === 'answerInput') {
+        if (lastFocusedInput === 'answerInput') {
             document.getElementById('answerInput').value = speechResult;
             checkAnswer();
-        } else if (currentInputMode === 'writingCheckBack') {
+        } else if (lastFocusedInput === 'writingCheckBack') {
             document.getElementById('writingCheckBack').value = speechResult;
             checkAnswerBack();
         } else {
@@ -337,10 +337,10 @@ function startSmartSpeechRecognition() {
     recognition.onresult = function (event) {
         const speechResult = event.results[0][0].transcript;
 
-        if (currentInputMode === 'answerInput') {
+        if (lastFocusedInput === 'answerInput') {
             document.getElementById('answerInput').value = speechResult;
             checkAnswer();
-        } else if (currentInputMode === 'writingCheckBack') {
+        } else if (lastFocusedInput === 'writingCheckBack') {
             document.getElementById('writingCheckBack').value = speechResult;
             checkAnswerBack();
         } else {
@@ -1034,22 +1034,20 @@ function startSpeechRecognitionFront() {
     // Load danh sách bài học từ json_list.json khi trang được tải
     
 let lastFocusedInput = null;
-let currentInputMode = null;
 
 document.getElementById('answerInput').addEventListener('focus', () => {
     lastFocusedInput = 'answerInput';
-    currentInputMode = 'answerInput';
 });
 document.getElementById('writingCheckBack').addEventListener('focus', () => {
     lastFocusedInput = 'writingCheckBack';
-    currentInputMode = 'writingCheckBack';
 });
 
 document.getElementById('speakCheckFrontButton').addEventListener('pointerdown', () => {
     const active = document.activeElement;
     if (active.id === 'answerInput' || active.id === 'writingCheckBack') {
         lastFocusedInput = active.id;
-        currentInputMode = active.id;
+    } else {
+        lastFocusedInput = null;
     }
 });
 
@@ -1077,10 +1075,10 @@ function startSmartSpeechRecognition() {
     recognition.onresult = function (event) {
         const speechResult = event.results[0][0].transcript;
 
-        if (currentInputMode === 'answerInput') {
+        if (lastFocusedInput === 'answerInput') {
             document.getElementById('answerInput').value = speechResult;
             checkAnswer();
-        } else if (currentInputMode === 'writingCheckBack') {
+        } else if (lastFocusedInput === 'writingCheckBack') {
             document.getElementById('writingCheckBack').value = speechResult;
             checkAnswerBack();
         } else {
