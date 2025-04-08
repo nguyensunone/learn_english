@@ -808,13 +808,30 @@ function autoFlipLogic() {
     }
 }
 
-function removePunctuation(text) {  
-    return text  
-        .replace(/[-]/g, ' ') // Thay thế dấu gạch nối bằng dấu cách  
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, '') // Loại bỏ các ký tự khác  
-        .replace(/\s{2,}/g, ' ') // Thay thế nhiều dấu cách thành một dấu cách  
-        .trim(); // Loại bỏ dấu cách thừa ở đầu và cuối chuỗi  
-}  
+function normalizeText(text) {
+    return text
+        .replace(/[-]/g, ' ')
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, '') // remove punctuation
+        .replace(/\s{2,}/g, ' ') // multiple spaces to one
+        .replace(/\b10\b/g, 'ten') // replace number 10 with word
+        .replace(/\b1\b/g, 'one')
+        .replace(/\b2\b/g, 'two')
+        .replace(/\b3\b/g, 'three')
+        .replace(/\b4\b/g, 'four')
+        .replace(/\b5\b/g, 'five')
+        .replace(/\b6\b/g, 'six')
+        .replace(/\b7\b/g, 'seven')
+        .replace(/\b8\b/g, 'eight')
+        .replace(/\b9\b/g, 'nine')
+        .replace(/\b0\b/g, 'zero')
+        .replace(/\b50\b/g, 'fifty')
+        .replace(/\b13\b/g, 'thirteen')
+        .replace(/\b100\b/g, 'one hundred')
+        .replace(/\b4th\b/g, 'fourth')
+        
+        .toLowerCase()
+        .trim();
+}
 
     function showNotification(message, isCorrect, userAnswer = "", correctAnswer = "") {
         const notification = document.getElementById('notification');
@@ -868,10 +885,10 @@ function removePunctuation(text) {
 
     function checkAnswer() {
     const answerInput = document.getElementById('answerInput');
-    const userAnswer = removePunctuation(answerInput.value.toString().trim().toLowerCase());
+    const userAnswer = normalizeText(answerInput.value.toString().trim().toLowerCase());
     const word = vocabList[currentIndex];
     const expectedText = isFront ? word[0] : word[3];
-    const normalizedExpectedText = removePunctuation(expectedText.toString().trim().toLowerCase());
+    const normalizedExpectedText = normalizeText(expectedText.toString().trim().toLowerCase());
 
     if (userAnswer === normalizedExpectedText) {
         showNotification("Đúng!", true);
@@ -908,8 +925,8 @@ function removePunctuation(text) {
 }
 
 function checkAnswerBack() {
-    const currentExample = removePunctuation(vocabList[currentIndex][3].toString().trim().toLowerCase());
-    const userAnswerBack = removePunctuation(document.getElementById("writingCheckBack").value.trim().toLowerCase());
+    const currentExample = normalizeText(vocabList[currentIndex][3].toString().trim().toLowerCase());
+    const userAnswerBack = normalizeText(document.getElementById("writingCheckBack").value.trim().toLowerCase());
     document.getElementById("writingCheckBack").value = "";
     document.getElementById("writingCheckBack").classList.remove('typing', 'checked');
 
