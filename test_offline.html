@@ -228,6 +228,13 @@
         #answerInput.checked, #writingCheckBack.checked {
             transition: all 0.3s ease;
         }
+        
+        /* Style cho checkbox */
+        label {
+            margin: 0 10px;
+            cursor: pointer;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
@@ -249,6 +256,9 @@
 </label>  
 <label>  
     <input type="checkbox" onchange="toggleVisibility('vietnamese')"> Ẩn Vi  
+</label>
+<label>  
+    <input type="checkbox" id="autoCheckToggle" checked onchange="toggleAutoCheck()"> Tự động kiểm tra  
 </label>
 </div>
 
@@ -303,6 +313,9 @@
     let isSpeechRecognitionActive = false;
     let sessionVocabList = []; // Danh sách từ vựng cho phiên học hiện tại
     let sessionStartIndex = 0; // Vị trí bắt đầu của phiên học
+    let isAutoCheckEnabled = true; // Bật tự động kiểm tra mặc định
+    let typingTimer; // Biến hẹn giờ
+    const doneTypingInterval = 1500; // Thời gian chờ sau khi ngừng nhập (ms)
 
     // Danh sách bài học được load động từ file json_list.json
     let lessons = [];
@@ -310,10 +323,23 @@
     let difficultWords = []; // Mảng lưu trữ các câu khó
     let askedIndices = []; // Lưu các index đã hỏi
     let isRandomCycleComplete = false; // Đánh dấu hoàn thành vòng lặp
-    
-    // Biến cho chức năng tự động kiểm tra
-    let typingTimer;                // Timer identifier
-    const doneTypingInterval = 3000; // Thời gian chờ sau khi ngừng nhập (ms)
+
+    // Hàm bật/tắt tự động kiểm tra
+    function toggleAutoCheck() {
+        isAutoCheckEnabled = !isAutoCheckEnabled;
+        const notification = document.getElementById('notification');
+        notification.textContent = `Tự động kiểm tra: ${isAutoCheckEnabled ? "BẬT" : "TẮT"}`;
+        notification.style.display = 'block';
+        notification.style.backgroundColor = isAutoCheckEnabled ? '#4caf50' : '#f44336';
+        setTimeout(() => notification.style.display = 'none', 2000);
+        
+        // Xóa timer nếu đang chạy khi tắt chức năng
+        if (!isAutoCheckEnabled) {
+            clearTimeout(typingTimer);
+            document.getElementById('answerInput').classList.remove('typing');
+            document.getElementById('writingCheckBack').classList.remove('typing');
+        }
+    }
 
     // Hàm khởi tạo: Load danh sách câu khó từ localStorage (nếu có)
     function loadDifficultWords() {
@@ -985,6 +1011,7 @@ function startSpeechRecognitionFront() {
 
 // Hàm xử lý khi ngừng nhập cho V1
 function handleTypingDoneV1() {
+    if (!isAutoCheckEnabled) return;
     const input = document.getElementById('answerInput');
     if (input.value.trim() !== '') {
         input.classList.add('checked');
@@ -995,6 +1022,7 @@ function handleTypingDoneV1() {
 
 // Hàm xử lý khi ngừng nhập cho V2
 function handleTypingDoneV2() {
+    if (!isAutoCheckEnabled) return;
     const input = document.getElementById('writingCheckBack');
     if (input.value.trim() !== '') {
         input.classList.add('checked');
@@ -1003,17 +1031,38 @@ function handleTypingDoneV2() {
     }
 }
 
-// Thêm sự kiện input cho các ô nhập liệu
+// Xử lý ô nhập V1
 document.getElementById('answerInput').addEventListener('input', function() {
+    if (!isAutoCheckEnabled) {
+        this.classList.remove('typing');
+        clearTimeout(typingTimer);
+        return;
+    }
+    
     this.classList.add('typing');
     clearTimeout(typingTimer);
-    typingTimer = setTimeout(handleTypingDoneV1, doneTypingInterval);
+    typingTimer = setTimeout(() => {
+        if (isAutoCheckEnabled) {
+            handleTypingDoneV1();
+        }
+    }, doneTypingInterval);
 });
 
+// Xử lý ô nhập V2
 document.getElementById('writingCheckBack').addEventListener('input', function() {
+    if (!isAutoCheckEnabled) {
+        this.classList.remove('typing');
+        clearTimeout(typingTimer);
+        return;
+    }
+    
     this.classList.add('typing');
     clearTimeout(typingTimer);
-    typingTimer = setTimeout(handleTypingDoneV2, doneTypingInterval);
+    typingTimer = setTimeout(() => {
+        if (isAutoCheckEnabled) {
+            handleTypingDoneV2();
+        }
+    }, doneTypingInterval);
 });
 
 // Hủy timeout nếu người dùng tiếp tục nhập
@@ -1024,34 +1073,11 @@ document.getElementById('answerInput').addEventListener('keydown', function() {
 document.getElementById('writingCheckBack').addEventListener('keydown', function() {
     clearTimeout(typingTimer);
 });
-
-function showTypingNotification() {
-    const notification = document.getElementById('notification');
-    notification.textContent = "Đang chờ kiểm tra...";
-    notification.style.display = 'block';
-    notification.style.backgroundColor = '#61dafb';
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 1000);
-}
     
     // Load danh sách bài học từ json_list.json khi trang được tải
     window.onload = function () {
         loadLessonList();
         loadDifficultWords(); // Tải danh sách câu khó
-        
-        // Khởi tạo sự kiện cho tự động kiểm tra
-        document.getElementById('answerInput').addEventListener('input', function() {
-            this.classList.add('typing');
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(handleTypingDoneV1, doneTypingInterval);
-        });
-
-        document.getElementById('writingCheckBack').addEventListener('input', function() {
-            this.classList.add('typing');
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(handleTypingDoneV2, doneTypingInterval);
-        });
     };
 </script>
 </body>
