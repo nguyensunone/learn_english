@@ -235,9 +235,32 @@
             cursor: pointer;
             user-select: none;
         }
+
+        .session-controls {
+            background-color: #1c2025;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .session-controls h3 {
+            margin-top: 0;
+            color: #61dafb;
+        }
+
+        .session-controls input {
+            padding: 8px;
+            border: 1px solid #61dafb;
+            background-color: #282c34;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+<a href="help.html" style="position: fixed; top: 20px; right: 20px; padding: 10px; background-color: #61dafb; color: #282c34; text-decoration: none; border-radius: 4px;">Help / Trợ giúp</a>
+
 <div style="text-align: center;">
     <div id="questionCounter">Câu hỏi: 0/0</div>
 </div>
@@ -289,9 +312,15 @@
 <select id="lessonSelector" onchange="loadLesson()">
     <!-- Các tùy chọn sẽ được thêm tự động từ json_list.json -->
 </select>
-<input type="number" id="startQuestion" placeholder="Bắt đầu" min="1" max="200">
-<input type="number" id="questionCount" placeholder="Tổng số" min="1" max="200">
-<button onclick="startSession()">Bắt Đầu Phiên Học</button>
+<!-- Thêm vào sau phần chọn bài học -->
+<div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
+    <input type="number" id="rangeStart" placeholder="Từ câu" min="1" style="width: 80px;">
+    <span>đến</span>
+    <input type="number" id="rangeEnd" placeholder="Đến câu" min="1" style="width: 80px;">
+    <button onclick="startRangeSession()" style="padding: 8px 15px;">Bắt đầu</button>
+    <button onclick="resetSession()" style="margin-top: 10px; padding: 8px 15px;">Reset Phiên Học</button>
+</div>
+
  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
@@ -392,6 +421,57 @@
         saveDifficultWords(); // Lưu lại vào localStorage
 
         alert("Câu này đã được xóa khỏi danh sách câu khó.");
+    }
+
+    // Hàm bắt đầu phiên học với khoảng câu đã chọn
+    function startRangeSession() {
+        const start = parseInt(document.getElementById('rangeStart').value);
+        const end = parseInt(document.getElementById('rangeEnd').value);
+
+        // Kiểm tra hợp lệ
+        if (isNaN(start)) {
+            showNotification("Vui lòng nhập câu bắt đầu", false);
+            return;
+        }
+        
+        if (isNaN(end)) {
+            showNotification("Vui lòng nhập câu kết thúc", false);
+            return;
+        }
+        
+        if (start < 1 || end < 1) {
+            showNotification("Số câu phải lớn hơn 0", false);
+            return;
+        }
+        
+        if (start > end) {
+            showNotification("Câu bắt đầu phải nhỏ hơn câu kết thúc", false);
+            return;
+        }
+        
+        // Tạo danh sách câu học từ start đến end
+        sessionVocabList = vocabList.slice(start - 1, end);
+        
+        if (sessionVocabList.length === 0) {
+            showNotification("Không có câu nào trong khoảng này", false);
+            return;
+        }
+        
+        // Bắt đầu phiên học mới
+        currentIndex = 0;
+        vocabList = sessionVocabList;
+        askedIndices = [];
+        isRandomCycleComplete = false;
+        isFront = true;
+        
+        showNotification(`Bắt đầu phiên học từ câu ${start} đến ${end}`, true);
+        displayWord();
+    }
+    // Hàm reset phiên học về toàn bộ danh sách
+    function resetSession() {
+        const selectedLessonName = document.getElementById('lessonSelector').value;
+        loadLesson(); // Tải lại bài học hiện tại
+        showNotification("Đã reset phiên học về toàn bộ danh sách", true);
     }
     
     function startSession() {
@@ -555,12 +635,20 @@ function flipCard() {
 
     // Hàm tải bài học và mapping từ file được chọn
     function loadLesson() {
+        // Reset các biến quan trọng
+        currentIndex = 0;
+        askedIndices = [];
+        isRandomCycleComplete = false;
+        isFront = true;
+        sessionVocabList = [];
         const selectedLessonName = document.getElementById('lessonSelector').value;
         const lessonData = lessons.find(lesson => lesson.name === selectedLessonName);
+        
         if (!lessonData) {
             alert("Bài học không tồn tại!");
             return;
         }
+
         // Tải từ vựng
         fetch("LESSON/" + lessonData.name)
             .then(response => response.json())
@@ -568,12 +656,15 @@ function flipCard() {
                 vocabList = data;
                 if (vocabList.length > 0) {
                     currentIndex = 0;
+                    askedIndices = [];
+                    isRandomCycleComplete = false;
                     displayWord();
                 } else {
                     document.getElementById('vocabLabel').innerText = "Không tìm thấy từ vựng nào.";
                 }
             })
             .catch(error => console.error('Lỗi khi đọc file từ vựng:', error));
+
         // Tải mapping âm thanh
         fetch("LESSON/" + lessonData.mapping)
             .then(response => response.json())
@@ -582,14 +673,6 @@ function flipCard() {
             })
             .catch(error => console.error('Lỗi khi đọc file mapping:', error));
     }
-
-    document.addEventListener('click', function resumeAudio() {
-        if (Howler && Howler.ctx && Howler.ctx.state === 'suspended') {
-            Howler.ctx.resume().then(function() {
-                console.log('AudioContext đã được kích hoạt lại.');
-            });
-        }
-    });
 
     function toggleMode() {
         isRandomMode = !isRandomMode;
@@ -825,6 +908,7 @@ function normalizeText(text) {
         .replace(/\b13\b/g, 'thirteen')
         .replace(/\b100\b/g, 'one hundred')
         .replace(/\b4th\b/g, 'fourth')
+        .replace(/\bJr.\b/g, 'Junior')
         
         .toLowerCase()
         .trim();
