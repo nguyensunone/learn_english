@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phát Luyện Dịch + Kiểm Tra Nói</title>
+  <title>Luyen Dich Viet Anh</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,19 +31,43 @@
       font-weight: bold;
       color: lightgreen;
     }
+    .options-row {
+      margin: 15px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
-  <h1>Phát Luyện Dịch + Kiểm Tra Nói</h1>
+  <h1>Luyen Dich Viet Anh</h1>
   <div>
     <select id="lessonSelector"></select>
     <button onclick="loadLesson()">Tải Bài Học</button>
   </div>
+  <div class="options-row">
+    <div class="option-item">
+      <label>Từ câu: <input id="practiceStart" type="number" min="1" value="1" style="width:60px;"></label>
+    </div>
+    <div class="option-item">
+      <label>đến: <input id="practiceEnd" type="number" min="1" style="width:60px;"></label>
+    </div>
+    <div class="option-item">
+      <label>Chờ giữa câu (ms): <input id="waitDelay" type="number" value="800" style="width:80px;"></label>
+    </div>
+    <div class="option-item">
+      <label><input type="checkbox" id="repeatLesson"> Lặp lại</label>
+    </div>
+    <div class="option-item">
+      <label><input type="checkbox" id="autoFlipCheckbox"> Tự động chuyển câu</label>
+    </div>
+  </div>
   <div>
-    <label>Từ câu: <input id="practiceStart" type="number" min="1" value="1" style="width:60px;"></label>
-    <label>đến: <input id="practiceEnd" type="number" min="1" style="width:60px;"></label>
-    <label>Chờ giữa câu (ms): <input id="waitDelay" type="number" value="800" style="width:80px;"></label>
-    <label>Lặp lại <input type="checkbox" id="repeatLesson"></label>
     <button onclick="startPracticeTranslationSession()">Bắt đầu</button>
     <button onclick="togglePausePractice()" id="pauseBtn">Tạm dừng</button>
   </div>
@@ -54,26 +78,28 @@
   <button id="retryBtn" onclick="retrySpeech()" style="display:none; margin-top:10px; padding:10px 20px; font-size:18px; background-color:#2196F3; color:white; border:none; border-radius:6px; cursor:pointer;">🔁 Nói lại</button>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <script>
-    let vocabList = [], audioMapping = [], lessons = [
-      {
-        name: "dam_thoai_01.json",
-        mapping: "mapping_dam_thoai_01.json",
-        audio: "audio_dam_thoai_01"
-      }
-    ];
+    let vocabList = [], audioMapping = [], lessons = [];
     let currentIndex = 0, practiceStep = 0, practiceCounter = 0;
     let isPracticeMode = false, isPaused = false, repeatMode = false;
     let waitDelay = 800, isSlowPronunciation = false, forceNext = false;
     let audio, recognition, currentPronunciationText = '';
+    let autoFlipMode = false;
 
     window.onload = () => {
-      const selector = document.getElementById('lessonSelector');
-      lessons.forEach(lesson => {
-        const option = document.createElement('option');
-        option.value = lesson.name;
-        option.textContent = lesson.name.replace('.json', '');
-        selector.appendChild(option);
-      });
+      fetch("json_list.json")
+        .then(res => res.json())
+        .then(data => {
+          lessons = data.lessons || [];
+          const selector = document.getElementById("lessonSelector");
+          selector.innerHTML = "";
+          lessons.forEach(lesson => {
+            const option = document.createElement("option");
+            option.value = lesson.name;
+            option.textContent = lesson.name.replace('.json', '');
+            selector.appendChild(option);
+          });
+        })
+        .catch(err => console.error("Không thể tải danh sách bài học", err));
     };
 
     function loadLesson() {
@@ -137,7 +163,7 @@
         src: [audioFilePath], html5: true,
         rate: isSlowPronunciation ? 0.75 : 1,
         onend: () => {
-          if (current.type === 'en' || current.type === 'ex_en') {
+          if ((current.type === 'en' || current.type === 'ex_en') && !autoFlipMode) {
             currentPronunciationText = current.text;
             forceNext = false;
             setTimeout(() => startSpeechRecognition(current.text), 300);
@@ -151,6 +177,12 @@
     }
 
     function startSpeechRecognition(expectedText) {
+      if (autoFlipMode) {
+        practiceStep++;
+        setTimeout(() => playPracticeSequence(), waitDelay);
+        return;
+      }
+
       if (!('webkitSpeechRecognition' in window)) return;
       recognition = new webkitSpeechRecognition();
       recognition.lang = 'en-US';
@@ -219,9 +251,12 @@
       practiceRangeEnd = parseInt(document.getElementById('practiceEnd').value);
       waitDelay = parseInt(document.getElementById('waitDelay').value) || 800;
       repeatMode = document.getElementById('repeatLesson').checked;
+      autoFlipMode = document.getElementById('autoFlipCheckbox').checked;
+      
       if (isNaN(practiceRangeStart) || isNaN(practiceRangeEnd) || practiceRangeStart < 0 || practiceRangeEnd <= practiceRangeStart || practiceRangeEnd > vocabList.length) {
         alert("Khoảng câu không hợp lệ."); return;
       }
+      
       currentIndex = practiceRangeStart;
       practiceCounter = 0;
       practiceStep = 0;
