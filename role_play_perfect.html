@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đóng Vai Hội Thoại</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #1e1e2f; color: #fff; padding: 20px; text-align: center; }
+    .card, .translation, .hint, .feedback, .fade { transition: opacity 0.5s ease-in-out; }
+    .card { background: #2b2d42; padding: 20px; border-radius: 12px; margin: 20px auto; max-width: 700px; font-size: 20px; }
+    select, button, input[type="radio"], input[type="text"], label { margin: 10px; padding: 10px; font-size: 16px; }
+    .translation { font-style: italic; color: #a0e0f0; margin-top: 10px; }
+    .hint { color: #ffd166; margin: 10px auto; font-style: italic; font-size: 18px; }
+    .correct { color: #4cc9f0; font-weight: bold; }
+    .wrong { color: #f72585; font-weight: bold; }
+    .hidden { opacity: 0; pointer-events: none; height: 0; overflow: hidden; }
+    .visible { opacity: 1; }
+    .mic-status { margin: 10px; font-style: italic; }
+    .prompt-message { color: #8ac926; font-style: italic; margin: 15px 0; font-size: 18px; }
+    .vietnamese-prompt { color: #f8f9fa; font-weight: bold; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>🎭 Đóng Vai Hội Thoại</h1>
+  <div>
+    <select id="lessonSelector"></select>
+    <button onclick="loadLesson()">📥 Tải Bài Học</button><br>
+    <label><input type="radio" name="role" value="answer" checked> Tôi là Người trả lời</label>
+    <label><input type="radio" name="role" value="ask"> Tôi là Người hỏi</label><br>
+    <label><input type="checkbox" id="hidePrompts" onchange="togglePrompts()"> Ẩn Gợi Ý và Câu Thoại</label><br>
+    <button onclick="startRolePlay()">🎬 Bắt đầu Đóng Vai</button>
+  </div>
+  <div class="card fade" id="dialogueDisplay">Câu thoại sẽ xuất hiện tại đây.</div>
+  <div id="translation" class="translation fade"></div>
+  <div id="hint" class="hint fade"></div>
+  <div id="vietnamesePrompt" class="vietnamese-prompt"></div>
+  <div id="promptMessage" class="prompt-message"></div>
+  <input type="text" id="userInput" placeholder="Nhập câu trả lời hoặc nói..." onkeydown="if(event.key==='Enter') checkAnswer()">
+  <button onclick="checkAnswer()">Kiểm tra</button>
+  <button id="micButton" onclick="toggleMic()">🎤 Bật Microphone</button>
+  <div id="micStatus" class="mic-status">Microphone: Tắt</div>
+  <div id="feedback" class="feedback"></div>
+
+<script>
+let lessonData = [];
+let mappingData = [];
+let lessons = [];
+let currentIndex = 0;
+let role = "answer";
+let expectedText = "";
+let recognition = null;
+let isMicActive = false;
+let isPlayingAudio = false;
+
+function togglePrompts() {
+  const hide = document.getElementById("hidePrompts").checked;
+  ["dialogueDisplay", "translation", "hint", "promptMessage", "vietnamesePrompt"].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = hide ? "hidden" : 
+      id === "promptMessage" ? "prompt-message" : 
+      id === "vietnamesePrompt" ? "vietnamese-prompt" : "fade visible";
+  });
+}
+
+function loadLesson() {
+  const selected = document.getElementById("lessonSelector").value;
+  const lesson = lessons.find(l => l.name === selected);
+  if (!lesson) return alert("Không tìm thấy bài học!");
+
+  Promise.all([
+    fetch("LESSON/" + lesson.name).then(res => res.json()),
+    fetch("LESSON/" + lesson.mapping).then(res => res.json())
+  ]).then(([data, mapping]) => {
+    lessonData = data;
+    mappingData = Array.isArray(mapping) ? mapping : [mapping];
+    document.getElementById("dialogueDisplay").innerText = "✅ Bài học đã được tải. Chọn chế độ và nhấn bắt đầu.";
+  }).catch(err => {
+    alert("❌ Không thể tải bài học hoặc mapping.");
+    console.error(err);
+  });
+}
+
+function startRolePlay() {
+  role = document.querySelector('input[name="role"]:checked').value;
+  currentIndex = 0;
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("promptMessage").innerHTML = "";
+  document.getElementById("vietnamesePrompt").innerHTML = "";
+  togglePrompts();
+  nextDialogue();
+}
+
+function nextDialogue() {
+  if (currentIndex >= lessonData.length) {
+    document.getElementById("dialogueDisplay").innerText = "✅ Hoàn tất đoạn hội thoại.";
+    document.getElementById("translation").innerText = "";
+    document.getElementById("hint").innerText = "";
+    document.getElementById("promptMessage").innerText = "";
+    document.getElementById("vietnamesePrompt").innerText = "";
+    stopMic();
+    return;
+  }
+
+  const item = lessonData[currentIndex];
+  let text, translation, hintText, vietnamesePrompt;
+
+  if (role === "answer") {
+    // Chế độ người trả lời
+    text = item[0]; 
+    translation = item[2]; 
+    expectedText = item[3];
+    hintText = "👉 Bạn cần trả lời: " + item[5];
+    vietnamesePrompt = "";
+  } else {
+    // Chế độ người hỏi
+    text = item[3]; 
+    translation = item[5]; 
+    expectedText = item[0];
+    hintText = "";
+    vietnamesePrompt = "💬 Hãy hỏi: " + item[2]; // Hiển thị câu hỏi tiếng Việt
+  }
+
+  document.getElementById("dialogueDisplay").innerText = text;
+  document.getElementById("translation").innerText = role === "answer" ? "💬 " + translation : "";
+  document.getElementById("hint").innerText = hintText;
+  document.getElementById("vietnamesePrompt").innerText = vietnamesePrompt;
+  document.getElementById("userInput").value = "";
+  document.getElementById("userInput").focus();
+
+  if (role === "answer") {
+    // Chế độ người trả lời: phát âm thanh câu hỏi
+    isPlayingAudio = true;
+    document.getElementById("promptMessage").innerText = "";
+    playAudio(text, () => {
+      isPlayingAudio = false;
+      if (isMicActive) {
+        startMic();
+      }
+    });
+  } else {
+    // Chế độ người hỏi: chỉ hiển thị prompt tiếng Việt
+    isPlayingAudio = false;
+    document.getElementById("promptMessage").innerText = "🔊 Hãy nói bằng tiếng Anh";
+    if (isMicActive) {
+      startMic();
+    }
+  }
+}
+
+function playAudio(text, callback) {
+  const audio = mappingData.find(a => a.text === text);
+  if (!audio) {
+    if (callback) callback();
+    return;
+  }
+  
+  const sound = new Howl({ 
+    src: ["LESSON/" + audio.file], 
+    html5: true,
+    onend: callback
+  });
+  sound.play();
+}
+
+function toggleMic() {
+  if (isMicActive) {
+    stopMic();
+  } else {
+    startMic();
+  }
+}
+
+function startMic() {
+  if (isPlayingAudio) return;
+  
+  if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    
+    recognition.onresult = function(event) {
+      const result = event.results[0][0].transcript.trim();
+      document.getElementById("userInput").value = result;
+      checkAnswer(); // Tự động kiểm tra khi có kết quả
+    };
+    
+    recognition.onerror = function(event) {
+      console.log("Speech recognition error", event.error);
+      document.getElementById("micStatus").innerText = "Microphone: Lỗi - " + event.error;
+    };
+    
+    recognition.onend = function() {
+      if (isMicActive) {
+        recognition.start();
+      }
+    };
+    
+    recognition.start();
+    isMicActive = true;
+    document.getElementById("micStatus").innerText = "Microphone: Đang hoạt động";
+    document.getElementById("micButton").innerText = "🎤 Tắt Microphone";
+  } else {
+    alert("Trình duyệt của bạn không hỗ trợ nhận dạng giọng nói.");
+  }
+}
+
+function stopMic() {
+  if (recognition) {
+    recognition.stop();
+  }
+  isMicActive = false;
+  document.getElementById("micStatus").innerText = "Microphone: Tắt";
+  document.getElementById("micButton").innerText = "🎤 Bật Microphone";
+}
+
+function checkAnswer() {
+  const userInput = document.getElementById("userInput").value.toLowerCase().trim();
+  const correct = expectedText.toLowerCase().trim();
+  const score = compareText(correct, userInput);
+  const feedback = document.getElementById("feedback");
+
+  if (score >= 80) {
+    feedback.innerHTML = `<div class='correct'>✅ Đúng! (${score}%)</div>`;
+    // Phát câu trả lời nếu là chế độ người hỏi
+    if (role === "ask") {
+      const answerText = lessonData[currentIndex][3]; // Lấy câu trả lời từ dữ liệu
+      isPlayingAudio = true;
+      playAudio(answerText, () => {
+        isPlayingAudio = false;
+        setTimeout(() => {
+          currentIndex++;
+          feedback.innerHTML = "";
+          nextDialogue();
+        }, 1000);
+      });
+    } else {
+      setTimeout(() => {
+        currentIndex++;
+        feedback.innerHTML = "";
+        nextDialogue();
+      }, 1000);
+    }
+  } else {
+    feedback.innerHTML = `<div class='wrong'>❌ Chưa chính xác (${score}%)<br>Đáp án đúng: ${expectedText}</div>`;
+    // Nếu sai, vẫn phát câu trả lời khi là người hỏi
+    if (role === "ask") {
+      const answerText = lessonData[currentIndex][3];
+      isPlayingAudio = true;
+      playAudio(answerText, () => {
+        isPlayingAudio = false;
+        setTimeout(() => {
+          currentIndex++;
+          feedback.innerHTML = "";
+          nextDialogue();
+        }, 1000);
+      });
+    }
+  }
+}
+
+function compareText(a, b) {
+  let matrix = Array(a.length+1).fill(null).map(()=>Array(b.length+1).fill(0));
+  for(let i=0;i<=a.length;i++)matrix[i][0]=i;
+  for(let j=0;j<=b.length;j++)matrix[0][j]=j;
+  for(let i=1;i<=a.length;i++){
+    for(let j=1;j<=b.length;j++){
+      matrix[i][j]=a[i-1]==b[j-1]?matrix[i-1][j-1]:1+Math.min(matrix[i-1][j],matrix[i][j-1],matrix[i-1][j-1]);
+    }
+  }
+  const distance = matrix[a.length][b.length];
+  const maxLen = Math.max(a.length, b.length);
+  return Math.round(100 - (distance / maxLen) * 100);
+}
+
+window.onload = function() {
+  fetch("json_list.json")
+    .then(res => res.json())
+    .then(data => {
+      lessons = data.lessons || [];
+      const selector = document.getElementById("lessonSelector");
+      lessons.forEach(lesson => {
+        const opt = document.createElement("option");
+        opt.value = lesson.name;
+        opt.innerText = lesson.name.replace(".json", "");
+        selector.appendChild(opt);
+      });
+    });
+};
+</script>
+</body>
+</html>
