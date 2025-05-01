@@ -224,6 +224,20 @@
         #appSelector:hover {
             background: #444 !important;
         }
+        #autoCheckSpeechV2Button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #autoCheckSpeechV2Button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -292,6 +306,16 @@
     <button onclick="resetSession()" style="margin-top: 10px; padding: 8px 15px;">Reset Phiên Học</button>
 </div>
  
+<div style="text-align: center;">
+    <select id="speechAccuracySelector" style="padding: 10px; font-size: 16px; margin-right: 10px;">
+        <option value="0.7">70%</option>
+        <option value="0.8" selected>80%</option>
+        <option value="0.9">90%</option>
+        <option value="1.0">100%</option>
+    </select>
+    <button id="autoCheckSpeechV2Button" onclick="startAutoCheckSpeechV2()">Tự Động Kiểm Tra Nói V2</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
@@ -614,58 +638,31 @@
             audio.stop();
             audio.unload();
         }
-
+    
         const audioEntry = audioMapping.find(item => item.text === text);
         if (audioEntry) {
-            const audioFilePath = "LESSON/" + audioEntry.file;
+            const audioFilePath = "LESSON/" + audioEntry.file.replace(/\\/g, '/');
+            console.log("Audio file path:", audioFilePath);
+            console.log("Creating new Howl object for:", text);
             audio = new Howl({
                 src: [audioFilePath],
                 html5: true,
                 rate: 1,
+                pool: 20, // Increase the pool size to 20
                 onload: function() {
                     audio.play();
-                    
-                    if (autoFlip) {
-                        clearTimeout(autoFlipTimeout);
-                        const duration = audio.duration() * 1000;
-                        const bufferTime = 2000;
-                        
-                        autoFlipTimeout = setTimeout(() => {
-                            if (!isFront) {
-                                nextWord();
-                            } else {
-                                flipCard();
-                            }
-                        }, duration + bufferTime);
-                    }
                 },
                 onend: function() {
                     console.log('Phát âm hoàn tất');
                 },
                 onloaderror: function(id, error) {
                     console.error("Lỗi phát âm thanh:", error);
-                    if (autoFlip) {
-                        autoFlipTimeout = setTimeout(() => {
-                            if (!isFront) {
-                                nextWord();
-                            } else {
-                                flipCard();
-                            }
-                        }, 5000);
-                    }
+                    showNotification("Không thể tải âm thanh cho: " + text, false);
                 }
             });
         } else {
             console.log("Không tìm thấy file âm thanh cho:", text);
-            if (autoFlip) {
-                autoFlipTimeout = setTimeout(() => {
-                    if (!isFront) {
-                        nextWord();
-                    } else {
-                        flipCard();
-                    }
-                }, 5000);
-            }
+            showNotification("Không tìm thấy âm thanh cho: " + text, false);
         }
     }
 
@@ -730,7 +727,7 @@
         const normalizedExpectedText = normalizeText(expectedText.toString().trim().toLowerCase());
 
         if (userAnswer === normalizedExpectedText) {
-            showNotification("\u0110\u00fang!", true);
+            showNotification("Đúng!", true); // Use the actual Unicode character
             playPronunciation(expectedText);
             if (audio) {
                 audio.once('end', function() {
@@ -929,6 +926,112 @@
     document.getElementById('writingCheckBack').addEventListener('keydown', function() {
         clearTimeout(typingTimer);
     });
+    
+    function startAutoCheckSpeechV2() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
+            return;
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'en-US'; // Ngôn ngữ nhận diện
+        recognition.interimResults = false; // Chỉ lấy kết quả cuối cùng
+        recognition.maxAlternatives = 1;
+
+        // Lấy tỷ lệ kiểm tra từ dropdown
+        const accuracyThreshold = parseFloat(document.getElementById('speechAccuracySelector').value);
+
+        recognition.onstart = function() {
+            showNotification("Đang nghe...", true);
+        };
+
+        recognition.onresult = function(event) {
+            const speechResult = event.results[0][0].transcript.trim().toLowerCase();
+            console.log("Kết quả nhận diện:", speechResult);
+
+            const word = vocabList[currentIndex];
+            const expectedText = normalizeText(word[3]); // Lấy câu trả lời đúng từ vocabList
+            const normalizedSpeechResult = normalizeText(speechResult);
+
+            // Tính độ tương đồng giữa câu trả lời và kết quả nhận diện
+            const similarity = calculateSimilarity(normalizedSpeechResult, expectedText);
+            console.log(`Độ chính xác: ${similarity * 100}%`);
+
+            if (similarity >= accuracyThreshold) {
+                // Nếu đúng
+                showNotification("Đúng!", true);
+
+                // Hiển thị câu đúng
+                document.getElementById('vocabLabel').innerHTML = `
+                    <div class="card">
+                        <span class="example">${word[3]}</span><br>
+                        <span class="example_ipa">${word[4]}</span><br>
+                        <span class="example_vi">${word[5]}</span>
+                    </div>
+                `;
+
+                // Phát âm câu trả lời đúng và đợi phát xong trước khi chuyển câu
+                playPronunciation(word[3]);
+                if (audio) {
+                    audio.once('end', function() {
+                        setTimeout(() => nextWord(), 1000); // Chuyển sang từ tiếp theo sau khi phát xong
+                    });
+                } else {
+                    setTimeout(() => nextWord(), 2000); // Chuyển câu nếu không có âm thanh
+                }
+            } else {
+                // Nếu sai
+                showNotification("Sai!", false);
+                playPronunciation(word[3]); // Phát âm câu trả lời đúng
+
+                // Hiển thị câu trả lời sai
+                document.getElementById('vocabLabel').innerHTML = `
+                    <div class="card">
+                        <div style="color: red; font-size: 24px; padding: 10px; border-radius: 8px;">
+                            ${speechResult}
+                        </div>
+                        <span class="example">${word[3]}</span><br>
+                        <span class="example_ipa">${word[4]}</span><br>
+                        <span class="example_vi">${word[5]}</span>
+                    </div>
+                `;
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Lỗi nhận diện giọng nói:", event.error);
+            showNotification("Lỗi nhận diện giọng nói: " + event.error, false);
+        };
+
+        recognition.onend = function() {
+            console.log("Kết thúc nhận diện giọng nói.");
+        };
+
+        recognition.start();
+    }
+    
+    function calculateSimilarity(str1, str2) {
+        const len1 = str1.length;
+        const len2 = str2.length;
+        const dp = Array.from({ length: len1 + 1 }, () => Array(len2 + 1).fill(0));
+
+        for (let i = 0; i <= len1; i++) dp[i][0] = i;
+        for (let j = 0; j <= len2; j++) dp[0][j] = j;
+
+        for (let i = 1; i <= len1; i++) {
+            for (let j = 1; j <= len2; j++) {
+                if (str1[i - 1] === str2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1;
+                }
+            }
+        }
+
+        const distance = dp[len1][len2];
+        const maxLen = Math.max(len1, len2);
+        return (maxLen - distance) / maxLen; // Trả về tỷ lệ chính xác
+    }
     
     window.onload = function () {
         loadLessonList();
