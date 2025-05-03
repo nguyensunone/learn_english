@@ -110,6 +110,16 @@
     <div class="option-item">
       <label><input type="checkbox" id="autoFlipCheckbox"> Tự động chuyển câu</label>
     </div>
+    <div class="option-item">
+      <label>Ngưỡng nhận dạng (%): 
+        <select id="recognitionThreshold" style="width: 80px;">
+          <option value="60">60</option>
+          <option value="70" selected>70</option>
+          <option value="80">80</option>
+          <option value="90">90</option>
+        </select>
+      </label>
+    </div>
   </div>
   <div>
     <button onclick="startPracticeTranslationSession()">Bắt đầu</button>
@@ -279,9 +289,10 @@
         recognition.onresult = (event) => {
             const result = event.results[0][0].transcript.toLowerCase();
             const score = comparePronunciation(expectedText.toLowerCase(), result);
+            const threshold = parseInt(document.getElementById('recognitionThreshold').value); // Lấy giá trị từ dropdown
             document.getElementById('recordingStatus').innerText = `🗣️ Bạn nói: "${result}" — Độ khớp: ${score}%`;
             
-            if (score >= 80 || forceNext) {
+            if (score >= threshold || forceNext) {
             // Hiển thị và phát âm câu đúng
             const word = vocabList[currentIndex];
             const isVocabulary = practiceStep === 0;
@@ -384,7 +395,7 @@
 
     function updatePracticeStatus() {
       const total = practiceRangeEnd - practiceRangeStart;
-      const completed = Math.min(practiceCounter, total);
+      const completed = Math.min(practiceCounter +1, total);
       document.getElementById('practiceStatus').innerText = `Đang luyện dịch: ${completed}/${total} câu`;
     }
 
