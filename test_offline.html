@@ -282,7 +282,7 @@
 <div style="text-align: center;">
     <button id="checkAnswerButton" onclick="checkAnswer()">V1</button>
     <button id="checkAnswerBackButton" onclick="checkAnswerBack()">V2</button>
-    <button id="speakCheckFrontButton" onclick="startSpeechRecognitionFront()">N1</button>
+    <button id="speakCheckFrontButton" onclick="startSpeechRecognitionFront()">Nói</button>
     <button id="autoCheckSpeechV2Button" onclick="startAutoCheckSpeechV2()">N2</button>
     <select id="speechAccuracySelector" style="padding: 10px; font-size: 16px; margin-right: 10px;">
         <option value="0.7">70%</option>
@@ -599,7 +599,7 @@
                 repeatPronunciation();
                 break;            
             case 'End':
-                startAutoCheckSpeechV2();
+                startSpeechRecognitionFront();
                 break;
             default:
                 break;
