@@ -34,6 +34,11 @@
             "name": "TQT_personal.json",
             "mapping": "mapping_TQT_personal.json",
             "audio": "audio_TQT_personal"
+        },
+        {
+            "name": "Biometric_QA.json",
+            "mapping": "mapping_Biometric_QA.json",
+            "audio": "audio_Biometric_QA"
         }
     ]
 }

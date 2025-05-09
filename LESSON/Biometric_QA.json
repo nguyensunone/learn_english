@@ -1,0 +1,242 @@
+[
+    [
+        "What is the purpose of your visit today?",
+        "/wʌt ɪz ðə ˈpɜːrpəs əv jɔːr ˈvɪzɪt təˈdeɪ/",
+        "Bạn đến đây hôm nay để làm gì?",
+        "I'm here for my biometric appointment.",
+        "/aɪm hɪr fɔːr maɪ ˌbaɪ.oʊˈmɛ.trɪk əˈpɔɪnt.mənt/",
+        "Tôi đến để lấy dấu vân tay."
+    ],
+    [
+        "Do you have your appointment notice with you?",
+        "/duː ju hæv jɔːr əˈpɔɪnt.mənt ˈnoʊ.tɪs wɪð juː/",
+        "Bạn có mang theo thư hẹn không?",
+        "Yes, I have it right here.",
+        "/jɛs, aɪ hæv ɪt raɪt hɪr/",
+        "Dạ có, tôi có mang theo đây."
+    ],
+    [
+        "Can I see your ID, please?",
+        "/kæn aɪ siː jɔːr ˌaɪˈdiː, pliːz/",
+        "Tôi có thể xem giấy tờ tùy thân của bạn không?",
+        "Here is my ID.",
+        "/hɪr ɪz maɪ ˌaɪˈdiː/",
+        "Đây là giấy tờ của tôi."
+    ],
+    [
+        "Please place your right hand on the scanner.",
+        "/pliːz pleɪs jɔːr raɪt hænd ɒn ðə ˈskænər/",
+        "Vui lòng đặt tay phải lên máy quét.",
+        "Like this?",
+        "/laɪk ðɪs/",
+        "Như thế này ạ?"
+    ],
+    [
+        "Now your left hand, please.",
+        "/naʊ jɔːr lɛft hænd, pliːz/",
+        "Bây giờ tay trái, làm ơn.",
+        "Okay.",
+        "/ˈoʊ.keɪ/",
+        "Dạ vâng."
+    ],
+    [
+        "Please look at the camera.",
+        "/pliːz lʊk æt ðə ˈkæm.rə/",
+        "Vui lòng nhìn vào máy ảnh.",
+        "Alright.",
+        "/ɔːlˈraɪt/",
+        "Vâng ạ."
+    ],
+    [
+        "You can relax your hands now.",
+        "/ju kæn rɪˈlæks jɔːr hændz naʊ/",
+        "Giờ bạn có thể thả lỏng tay.",
+        "Thank you.",
+        "/ˈθæŋk juː/",
+        "Cảm ơn."
+    ],
+    [
+        "That's all for today. You're done.",
+        "/ðæts ɔːl fɔːr təˈdeɪ. jʊr dʌn/",
+        "Hôm nay xong rồi, bạn có thể về.",
+        "Great, thank you!",
+        "/ɡreɪt, ˈθæŋk juː/",
+        "Tốt quá, cảm ơn!"
+    ],
+    [
+        "Do you have any questions?",
+        "/duː ju hæv ˈɛni ˈkwɛs.tʃənz/",
+        "Bạn có câu hỏi nào không?",
+        "No, I'm good. Thanks.",
+        "/noʊ, aɪm ɡʊd. θæŋks/",
+        "Không, tôi ổn. Cảm ơn."
+    ],
+    [
+        "Please sign here.",
+        "/pliːz saɪn hɪr/",
+        "Vui lòng ký tên ở đây.",
+        "Okay, here you go.",
+        "/ˈoʊ.keɪ, hɪr ju ɡoʊ/",
+        "Vâng, tôi ký đây."
+    ],
+    [
+        "Can you confirm your full name, please?",
+        "/kæn ju kənˈfɜːrm jɔːr fʊl neɪm, pliːz/",
+        "Bạn có thể xác nhận họ tên đầy đủ không?",
+        "My full name is Nguyen Van A.",
+        "/maɪ fʊl neɪm ɪz nuˈjɛn væn eɪ/",
+        "Tên đầy đủ của tôi là Nguyễn Văn A."
+    ],
+    [
+        "What is your date of birth?",
+        "/wʌt ɪz jɔːr deɪt əv bɜːrθ/",
+        "Ngày sinh của bạn là gì?",
+        "I was born on January 5, 1990.",
+        "/aɪ wəz bɔːrn ɒn ˈdʒæn.ju.er.i fɪfθ, naɪnˈtiːn ˈnaɪn.ti/",
+        "Tôi sinh ngày 5 tháng 1 năm 1990."
+    ],
+    [
+        "What is your A-number?",
+        "/wʌt ɪz jɔːr eɪ ˈnʌm.bər/",
+        "Số A-number của bạn là gì?",
+        "It's A 123 456 789.",
+        "/ɪts eɪ wʌn tu θri fɔːr faɪv sɪks sev.ən naɪn/",
+        "Là A 123 456 789."
+    ],
+    [
+        "Have you brought your appointment letter?",
+        "/hæv ju brɔːt jɔːr əˈpɔɪntmənt ˈlɛtər/",
+        "Bạn có mang theo thư hẹn không?",
+        "Yes, I have it right here.",
+        "/jɛs, aɪ hæv ɪt raɪt hɪr/",
+        "Dạ có, tôi có mang đây."
+    ],
+    [
+        "Please wait in line until you're called.",
+        "/pliːz weɪt ɪn laɪn ənˈtɪl jʊr kɔːld/",
+        "Vui lòng xếp hàng cho đến khi được gọi tên.",
+        "Sure, thank you.",
+        "/ʃʊr, ˈθæŋk juː/",
+        "Vâng, cảm ơn."
+    ],
+    [
+        "Your fingerprints are not clear. Let's try again.",
+        "/jɔːr ˈfɪŋɡərprɪnts ɑːr nɒt klɪər. lɛts traɪ əˈɡɛn/",
+        "Dấu vân tay của bạn không rõ. Thử lại lần nữa nhé.",
+        "Okay, no problem.",
+        "/ˈoʊ.keɪ, noʊ ˈprɑː.bləm/",
+        "Dạ vâng, không sao."
+    ],
+    [
+        "Please clean your fingers and try again.",
+        "/pliːz kliːn jɔːr ˈfɪŋɡərz ənd traɪ əˈɡɛn/",
+        "Vui lòng lau tay rồi thử lại.",
+        "I will, thank you.",
+        "/aɪ wɪl, ˈθæŋk juː/",
+        "Tôi sẽ làm, cảm ơn."
+    ],
+    [
+        "Did you recently injure your fingers?",
+        "/dɪd ju ˈriːsəntli ˈɪndʒər jɔːr ˈfɪŋɡərz/",
+        "Gần đây bạn có bị thương ở tay không?",
+        "No, I didn't.",
+        "/noʊ, aɪ ˈdɪd.ənt/",
+        "Dạ không."
+    ],
+    [
+        "Please follow me to the next station.",
+        "/pliːz ˈfɒləʊ mi tu ðə nɛkst ˈsteɪʃən/",
+        "Vui lòng đi theo tôi đến trạm kế tiếp.",
+        "Alright.",
+        "/ɔːlˈraɪt/",
+        "Dạ được."
+    ],
+    [
+        "Your biometric process is complete.",
+        "/jɔːr ˌbaɪ.oʊˈmɛ.trɪk ˈprɑː.ses ɪz kəmˈpliːt/",
+        "Quá trình lấy dữ liệu sinh trắc của bạn đã hoàn tất.",
+        "Thank you, have a nice day!",
+        "/ˈθæŋk ju, hæv ə naɪs deɪ/",
+        "Cảm ơn, chúc một ngày tốt lành!"
+    ],
+    [
+        "Do you need an interpreter?",
+        "/duː ju niːd æn ɪnˈtɜːrprɪtər/",
+        "Bạn có cần phiên dịch viên không?",
+        "Yes, I need a Vietnamese interpreter.",
+        "/jɛs, aɪ niːd ə ˌvjet.nəˈmiːz ɪnˈtɜːrprɪtər/",
+        "Dạ có, tôi cần phiên dịch tiếng Việt."
+    ],
+    [
+        "Are you feeling okay today?",
+        "/ɑːr ju ˈfiː.lɪŋ ˌoʊˈkeɪ təˈdeɪ/",
+        "Hôm nay bạn cảm thấy ổn chứ?",
+        "I feel a bit nervous.",
+        "/aɪ fiːl ə bɪt ˈnɜːrvəs/",
+        "Tôi thấy hơi lo lắng."
+    ],
+    [
+        "If you need help, please raise your hand.",
+        "/ɪf ju niːd hɛlp, pliːz reɪz jɔːr hænd/",
+        "Nếu bạn cần giúp đỡ, hãy giơ tay nhé.",
+        "Okay, thank you.",
+        "/ˈoʊ.keɪ, ˈθæŋk juː/",
+        "Dạ, cảm ơn."
+    ],
+    [
+        "Your name is not on our list. Do you have proof?",
+        "/jɔːr neɪm ɪz nɒt ɒn aʊər lɪst. du ju hæv pruːf/",
+        "Tên bạn không có trong danh sách. Bạn có bằng chứng không?",
+        "Yes, this is my appointment letter.",
+        "/jɛs, ðɪs ɪz maɪ əˈpɔɪnt.mənt ˈlɛtər/",
+        "Có, đây là thư hẹn của tôi."
+    ],
+    [
+        "We may need to reschedule your appointment.",
+        "/wi meɪ niːd tu riːˈskɛd.juːl jɔːr əˈpɔɪnt.mənt/",
+        "Chúng tôi có thể cần dời lại lịch hẹn của bạn.",
+        "I understand. Please let me know the new date.",
+        "/aɪ ˌʌndərˈstænd. pliːz lɛt mi noʊ ðə nuː deɪt/",
+        "Tôi hiểu. Vui lòng thông báo ngày mới giúp tôi."
+    ],
+    [
+        "Sorry, you arrived too early.",
+        "/ˈsɒr.i, ju əˈraɪvd tuː ˈɜːrli/",
+        "Xin lỗi, bạn đến quá sớm.",
+        "I'll wait here, thank you.",
+        "/aɪl weɪt hɪr, ˈθæŋk juː/",
+        "Tôi sẽ chờ ở đây, cảm ơn."
+    ],
+    [
+        "Do you need wheelchair assistance?",
+        "/du ju niːd ˈwiːl.tʃer əˈsɪstəns/",
+        "Bạn có cần hỗ trợ xe lăn không?",
+        "No, I'm fine, thank you.",
+        "/noʊ, aɪm faɪn, ˈθæŋk juː/",
+        "Dạ không, tôi ổn, cảm ơn."
+    ],
+    [
+        "Are you here with someone?",
+        "/ɑːr ju hɪr wɪð ˈsʌmwʌn/",
+        "Bạn có đi cùng ai không?",
+        "Yes, I'm here with my wife.",
+        "/jɛs, aɪm hɪr wɪð maɪ waɪf/",
+        "Dạ có, tôi đi cùng vợ tôi."
+    ],
+    [
+        "Please turn off your phone during the process.",
+        "/pliːz tɜrn ɒf jɔːr foʊn ˈdjʊrɪŋ ðə ˈprəʊ.ses/",
+        "Vui lòng tắt điện thoại trong suốt quá trình.",
+        "Yes, it's off now.",
+        "/jɛs, ɪts ɒf naʊ/",
+        "Dạ rồi, tôi đã tắt."
+    ],
+    [
+        "If you have questions, ask the front desk.",
+        "/ɪf ju hæv ˈkwɛstʃənz, æsk ðə frʌnt dɛsk/",
+        "Nếu bạn có thắc mắc, hãy hỏi quầy tiếp tân.",
+        "Thank you, I will.",
+        "/ˈθæŋk ju, aɪ wɪl/",
+        "Cảm ơn, tôi sẽ hỏi."
+    ]
+]

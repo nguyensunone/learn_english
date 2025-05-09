@@ -1,0 +1,602 @@
+[
+    {
+        "text": "What is the purpose of your visit today?",
+        "file": "audio_Biometric_QA\\en_0.mp3",
+        "type": "en"
+    },
+    {
+        "text": "I'm here for my biometric appointment.",
+        "file": "audio_Biometric_QA\\ex_en_0.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn đến đây hôm nay để làm gì?",
+        "file": "audio_Biometric_QA\\vi_0.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tôi đến để lấy dấu vân tay.",
+        "file": "audio_Biometric_QA\\ex_vi_0.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Do you have your appointment notice with you?",
+        "file": "audio_Biometric_QA\\en_1.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Yes, I have it right here.",
+        "file": "audio_Biometric_QA\\ex_en_1.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn có mang theo thư hẹn không?",
+        "file": "audio_Biometric_QA\\vi_1.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ có, tôi có mang theo đây.",
+        "file": "audio_Biometric_QA\\ex_vi_1.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Can I see your ID, please?",
+        "file": "audio_Biometric_QA\\en_2.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Here is my ID.",
+        "file": "audio_Biometric_QA\\ex_en_2.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Tôi có thể xem giấy tờ tùy thân của bạn không?",
+        "file": "audio_Biometric_QA\\vi_2.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Đây là giấy tờ của tôi.",
+        "file": "audio_Biometric_QA\\ex_vi_2.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Please place your right hand on the scanner.",
+        "file": "audio_Biometric_QA\\en_3.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Like this?",
+        "file": "audio_Biometric_QA\\ex_en_3.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Vui lòng đặt tay phải lên máy quét.",
+        "file": "audio_Biometric_QA\\vi_3.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Như thế này ạ?",
+        "file": "audio_Biometric_QA\\ex_vi_3.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Now your left hand, please.",
+        "file": "audio_Biometric_QA\\en_4.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Okay.",
+        "file": "audio_Biometric_QA\\ex_en_4.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bây giờ tay trái, làm ơn.",
+        "file": "audio_Biometric_QA\\vi_4.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ vâng.",
+        "file": "audio_Biometric_QA\\ex_vi_4.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Please look at the camera.",
+        "file": "audio_Biometric_QA\\en_5.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Alright.",
+        "file": "audio_Biometric_QA\\ex_en_5.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Vui lòng nhìn vào máy ảnh.",
+        "file": "audio_Biometric_QA\\vi_5.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Vâng ạ.",
+        "file": "audio_Biometric_QA\\ex_vi_5.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "You can relax your hands now.",
+        "file": "audio_Biometric_QA\\en_6.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Thank you.",
+        "file": "audio_Biometric_QA\\ex_en_6.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Giờ bạn có thể thả lỏng tay.",
+        "file": "audio_Biometric_QA\\vi_6.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Cảm ơn.",
+        "file": "audio_Biometric_QA\\ex_vi_6.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "That's all for today. You're done.",
+        "file": "audio_Biometric_QA\\en_7.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Great, thank you!",
+        "file": "audio_Biometric_QA\\ex_en_7.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Hôm nay xong rồi, bạn có thể về.",
+        "file": "audio_Biometric_QA\\vi_7.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tốt quá, cảm ơn!",
+        "file": "audio_Biometric_QA\\ex_vi_7.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Do you have any questions?",
+        "file": "audio_Biometric_QA\\en_8.mp3",
+        "type": "en"
+    },
+    {
+        "text": "No, I'm good. Thanks.",
+        "file": "audio_Biometric_QA\\ex_en_8.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn có câu hỏi nào không?",
+        "file": "audio_Biometric_QA\\vi_8.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Không, tôi ổn. Cảm ơn.",
+        "file": "audio_Biometric_QA\\ex_vi_8.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Please sign here.",
+        "file": "audio_Biometric_QA\\en_9.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Okay, here you go.",
+        "file": "audio_Biometric_QA\\ex_en_9.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Vui lòng ký tên ở đây.",
+        "file": "audio_Biometric_QA\\vi_9.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Vâng, tôi ký đây.",
+        "file": "audio_Biometric_QA\\ex_vi_9.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Can you confirm your full name, please?",
+        "file": "audio_Biometric_QA\\en_10.mp3",
+        "type": "en"
+    },
+    {
+        "text": "My full name is Nguyen Van A.",
+        "file": "audio_Biometric_QA\\ex_en_10.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn có thể xác nhận họ tên đầy đủ không?",
+        "file": "audio_Biometric_QA\\vi_10.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tên đầy đủ của tôi là Nguyễn Văn A.",
+        "file": "audio_Biometric_QA\\ex_vi_10.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "What is your date of birth?",
+        "file": "audio_Biometric_QA\\en_11.mp3",
+        "type": "en"
+    },
+    {
+        "text": "I was born on January 5, 1990.",
+        "file": "audio_Biometric_QA\\ex_en_11.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Ngày sinh của bạn là gì?",
+        "file": "audio_Biometric_QA\\vi_11.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tôi sinh ngày 5 tháng 1 năm 1990.",
+        "file": "audio_Biometric_QA\\ex_vi_11.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "What is your A-number?",
+        "file": "audio_Biometric_QA\\en_12.mp3",
+        "type": "en"
+    },
+    {
+        "text": "It's A 123 456 789.",
+        "file": "audio_Biometric_QA\\ex_en_12.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Số A-number của bạn là gì?",
+        "file": "audio_Biometric_QA\\vi_12.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Là A 123 456 789.",
+        "file": "audio_Biometric_QA\\ex_vi_12.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Have you brought your appointment letter?",
+        "file": "audio_Biometric_QA\\en_13.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Yes, I have it right here.",
+        "file": "audio_Biometric_QA\\ex_en_13.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn có mang theo thư hẹn không?",
+        "file": "audio_Biometric_QA\\vi_13.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ có, tôi có mang đây.",
+        "file": "audio_Biometric_QA\\ex_vi_13.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Please wait in line until you're called.",
+        "file": "audio_Biometric_QA\\en_14.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Sure, thank you.",
+        "file": "audio_Biometric_QA\\ex_en_14.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Vui lòng xếp hàng cho đến khi được gọi tên.",
+        "file": "audio_Biometric_QA\\vi_14.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Vâng, cảm ơn.",
+        "file": "audio_Biometric_QA\\ex_vi_14.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Your fingerprints are not clear. Let's try again.",
+        "file": "audio_Biometric_QA\\en_15.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Okay, no problem.",
+        "file": "audio_Biometric_QA\\ex_en_15.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Dấu vân tay của bạn không rõ. Thử lại lần nữa nhé.",
+        "file": "audio_Biometric_QA\\vi_15.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ vâng, không sao.",
+        "file": "audio_Biometric_QA\\ex_vi_15.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Please clean your fingers and try again.",
+        "file": "audio_Biometric_QA\\en_16.mp3",
+        "type": "en"
+    },
+    {
+        "text": "I will, thank you.",
+        "file": "audio_Biometric_QA\\ex_en_16.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Vui lòng lau tay rồi thử lại.",
+        "file": "audio_Biometric_QA\\vi_16.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tôi sẽ làm, cảm ơn.",
+        "file": "audio_Biometric_QA\\ex_vi_16.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Did you recently injure your fingers?",
+        "file": "audio_Biometric_QA\\en_17.mp3",
+        "type": "en"
+    },
+    {
+        "text": "No, I didn't.",
+        "file": "audio_Biometric_QA\\ex_en_17.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Gần đây bạn có bị thương ở tay không?",
+        "file": "audio_Biometric_QA\\vi_17.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ không.",
+        "file": "audio_Biometric_QA\\ex_vi_17.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Please follow me to the next station.",
+        "file": "audio_Biometric_QA\\en_18.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Alright.",
+        "file": "audio_Biometric_QA\\ex_en_18.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Vui lòng đi theo tôi đến trạm kế tiếp.",
+        "file": "audio_Biometric_QA\\vi_18.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ được.",
+        "file": "audio_Biometric_QA\\ex_vi_18.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Your biometric process is complete.",
+        "file": "audio_Biometric_QA\\en_19.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Thank you, have a nice day!",
+        "file": "audio_Biometric_QA\\ex_en_19.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Quá trình lấy dữ liệu sinh trắc của bạn đã hoàn tất.",
+        "file": "audio_Biometric_QA\\vi_19.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Cảm ơn, chúc một ngày tốt lành!",
+        "file": "audio_Biometric_QA\\ex_vi_19.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Do you need an interpreter?",
+        "file": "audio_Biometric_QA\\en_20.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Yes, I need a Vietnamese interpreter.",
+        "file": "audio_Biometric_QA\\ex_en_20.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn có cần phiên dịch viên không?",
+        "file": "audio_Biometric_QA\\vi_20.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ có, tôi cần phiên dịch tiếng Việt.",
+        "file": "audio_Biometric_QA\\ex_vi_20.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Are you feeling okay today?",
+        "file": "audio_Biometric_QA\\en_21.mp3",
+        "type": "en"
+    },
+    {
+        "text": "I feel a bit nervous.",
+        "file": "audio_Biometric_QA\\ex_en_21.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Hôm nay bạn cảm thấy ổn chứ?",
+        "file": "audio_Biometric_QA\\vi_21.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tôi thấy hơi lo lắng.",
+        "file": "audio_Biometric_QA\\ex_vi_21.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "If you need help, please raise your hand.",
+        "file": "audio_Biometric_QA\\en_22.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Okay, thank you.",
+        "file": "audio_Biometric_QA\\ex_en_22.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Nếu bạn cần giúp đỡ, hãy giơ tay nhé.",
+        "file": "audio_Biometric_QA\\vi_22.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ, cảm ơn.",
+        "file": "audio_Biometric_QA\\ex_vi_22.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Your name is not on our list. Do you have proof?",
+        "file": "audio_Biometric_QA\\en_23.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Yes, this is my appointment letter.",
+        "file": "audio_Biometric_QA\\ex_en_23.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Tên bạn không có trong danh sách. Bạn có bằng chứng không?",
+        "file": "audio_Biometric_QA\\vi_23.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Có, đây là thư hẹn của tôi.",
+        "file": "audio_Biometric_QA\\ex_vi_23.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "We may need to reschedule your appointment.",
+        "file": "audio_Biometric_QA\\en_24.mp3",
+        "type": "en"
+    },
+    {
+        "text": "I understand. Please let me know the new date.",
+        "file": "audio_Biometric_QA\\ex_en_24.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Chúng tôi có thể cần dời lại lịch hẹn của bạn.",
+        "file": "audio_Biometric_QA\\vi_24.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tôi hiểu. Vui lòng thông báo ngày mới giúp tôi.",
+        "file": "audio_Biometric_QA\\ex_vi_24.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Sorry, you arrived too early.",
+        "file": "audio_Biometric_QA\\en_25.mp3",
+        "type": "en"
+    },
+    {
+        "text": "I'll wait here, thank you.",
+        "file": "audio_Biometric_QA\\ex_en_25.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Xin lỗi, bạn đến quá sớm.",
+        "file": "audio_Biometric_QA\\vi_25.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Tôi sẽ chờ ở đây, cảm ơn.",
+        "file": "audio_Biometric_QA\\ex_vi_25.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Do you need wheelchair assistance?",
+        "file": "audio_Biometric_QA\\en_26.mp3",
+        "type": "en"
+    },
+    {
+        "text": "No, I'm fine, thank you.",
+        "file": "audio_Biometric_QA\\ex_en_26.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn có cần hỗ trợ xe lăn không?",
+        "file": "audio_Biometric_QA\\vi_26.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ không, tôi ổn, cảm ơn.",
+        "file": "audio_Biometric_QA\\ex_vi_26.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Are you here with someone?",
+        "file": "audio_Biometric_QA\\en_27.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Yes, I'm here with my wife.",
+        "file": "audio_Biometric_QA\\ex_en_27.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Bạn có đi cùng ai không?",
+        "file": "audio_Biometric_QA\\vi_27.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ có, tôi đi cùng vợ tôi.",
+        "file": "audio_Biometric_QA\\ex_vi_27.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "Please turn off your phone during the process.",
+        "file": "audio_Biometric_QA\\en_28.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Yes, it's off now.",
+        "file": "audio_Biometric_QA\\ex_en_28.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Vui lòng tắt điện thoại trong suốt quá trình.",
+        "file": "audio_Biometric_QA\\vi_28.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Dạ rồi, tôi đã tắt.",
+        "file": "audio_Biometric_QA\\ex_vi_28.mp3",
+        "type": "ex_vi"
+    },
+    {
+        "text": "If you have questions, ask the front desk.",
+        "file": "audio_Biometric_QA\\en_29.mp3",
+        "type": "en"
+    },
+    {
+        "text": "Thank you, I will.",
+        "file": "audio_Biometric_QA\\ex_en_29.mp3",
+        "type": "ex_en"
+    },
+    {
+        "text": "Nếu bạn có thắc mắc, hãy hỏi quầy tiếp tân.",
+        "file": "audio_Biometric_QA\\vi_29.mp3",
+        "type": "vi"
+    },
+    {
+        "text": "Cảm ơn, tôi sẽ hỏi.",
+        "file": "audio_Biometric_QA\\ex_vi_29.mp3",
+        "type": "ex_vi"
+    }
+]
