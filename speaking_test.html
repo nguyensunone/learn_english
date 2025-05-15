@@ -235,6 +235,19 @@
         </div>
     </div>
 
+    <!-- Điều chỉnh thời gian tự động chuyển thẻ -->
+    <div class="threshold-control">
+        <label for="autoFlipDelay">Thời gian đợi giữa các lần chuyển thẻ (giây): 
+            <span id="autoFlipDelayValue" class="threshold-value">2</span>
+        </label>
+        <input type="range" id="autoFlipDelay" min="1" max="10" value="2" 
+               oninput="updateAutoFlipDelay(this.value)">
+    </div>
+
+<div style="text-align: center; margin-top: 20px;">
+    <button id="autoSpeakingButton" onclick="toggleAutoSpeaking()">Bật Tự Động Nói</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 
@@ -258,10 +271,17 @@
     let hiddenElements = { term: false, ipa: false, vietnamese: false };
     let askedIndices = [];
     let isRandomCycleComplete = false;
+    let autoFlipDelay = 2000; // Thời gian đợi mặc định là 2 giây
+    let isAutoSpeakingEnabled = false; // Biến kiểm soát chế độ tự động kiểm tra nói
 
     function updateThresholdValue(value) {
         recognitionThreshold = value / 100;
         document.getElementById('thresholdValue').textContent = value + '%';
+    }
+
+    function updateAutoFlipDelay(value) {
+        autoFlipDelay = value * 1000; // Chuyển đổi giây sang mili giây
+        document.getElementById('autoFlipDelayValue').textContent = value;
     }
 
     function toggleAutoCheck() {
@@ -271,6 +291,16 @@
         notification.style.display = 'block';
         notification.style.backgroundColor = isAutoCheckEnabled ? '#4caf50' : '#f44336';
         setTimeout(() => notification.style.display = 'none', 2000);
+    }
+
+    function toggleAutoSpeaking() {
+        isAutoSpeakingEnabled = !isAutoSpeakingEnabled;
+        const button = document.getElementById('autoSpeakingButton');
+        button.innerText = isAutoSpeakingEnabled ? "Tắt Tự Động Nói" : "Bật Tự Động Nói";
+
+        if (isAutoSpeakingEnabled) {
+            startSpeechRecognition('front');
+        }
     }
 
     function startRangeSession() {
@@ -509,10 +539,10 @@
             case 'ArrowUp':
                 repeatPronunciation();
                 break;            
-            case ' ':
+            case '1':
                 startSpeechRecognition(isFront ? 'front' : 'back');
                 break;
-            case 'End':
+            case '3':
                 startSpeechRecognition('back');
                 break;
             default:
@@ -551,7 +581,6 @@
                     if (autoFlip) {
                         clearTimeout(autoFlipTimeout);
                         const duration = audio.duration() * 1000;
-                        const bufferTime = 2000;
                         
                         autoFlipTimeout = setTimeout(() => {
                             if (!isFront) {
@@ -559,7 +588,7 @@
                             } else {
                                 flipCard();
                             }
-                        }, duration + bufferTime);
+                        }, duration + autoFlipDelay);
                     }
                 },
                 onend: function() {
@@ -574,7 +603,7 @@
                             } else {
                                 flipCard();
                             }
-                        }, 5000);
+                        }, autoFlipDelay);
                     }
                 }
             });
@@ -587,7 +616,7 @@
                     } else {
                         flipCard();
                     }
-                }, 5000);
+                }, autoFlipDelay);
             }
         }
     }
@@ -673,43 +702,48 @@
         recognition.onresult = function(event) {
             const speechResult = event.results[0][0].transcript;
             document.getElementById('recognizedSpeech').textContent = speechResult;
-            
+
             const word = vocabList[currentIndex];
-            const expectedText = side === 'front' ? word[0] : word[3];
+            const expectedText = side === 'front' ? word[0] : word[3]; // Nhận dạng mặt trước hoặc mặt sau
             const normalizedExpectedText = normalizeText(expectedText.toString());
             const normalizedSpeechResult = normalizeText(speechResult.toString());
-            
+
             const similarity = calculateSimilarity(normalizedSpeechResult, normalizedExpectedText);
             const isCorrect = similarity >= recognitionThreshold;
-            
+
             if (isCorrect) {
                 showNotification(`Đúng! (Độ chính xác: ${Math.round(similarity * 100)}%)`, true);
+
+                // Phát âm lại câu đúng
                 playPronunciation(expectedText);
-                
+
+                // Đợi phát âm xong trước khi chuyển thẻ
                 if (audio) {
                     audio.once('end', function() {
                         setTimeout(() => {
                             if (side === 'front') {
-                                flipCard();
+                                flipCard(); // Lật thẻ sang mặt sau (word[3])
+                                if (isAutoSpeakingEnabled) {
+                                    setTimeout(() => startSpeechRecognition('back'), 2000); // Nhận dạng mặt sau
+                                }
                             } else {
-                                nextWord();
+                                nextWord(); // Chuyển sang từ tiếp theo
+                                if (isAutoSpeakingEnabled) {
+                                    setTimeout(() => startSpeechRecognition('front'), 2000); // Nhận dạng mặt trước
+                                }
                             }
                         }, 1000);
                     });
-                } else {
-                    setTimeout(() => {
-                        if (side === 'front') {
-                            flipCard();
-                        } else {
-                            nextWord();
-                        }
-                    }, 4000);
                 }
             } else {
                 showNotification(`Sai! (Độ chính xác: ${Math.round(similarity * 100)}%)`, false);
                 playPronunciation(expectedText);
+
+                if (isAutoSpeakingEnabled) {
+                    setTimeout(() => startSpeechRecognition(side), 4000); // Lặp lại kiểm tra nếu sai
+                }
             }
-            
+
             recognition.stop();
         };
 
@@ -717,6 +751,10 @@
             console.error("Lỗi nhận diện giọng nói: ", event.error);
             document.getElementById('recognizedSpeech').textContent = "Lỗi: " + event.error;
             recognition.stop();
+
+            if (isAutoSpeakingEnabled) {
+                setTimeout(() => startSpeechRecognition(side), 2000); // Lặp lại kiểm tra nếu có lỗi
+            }
         };
 
         recognition.start();
